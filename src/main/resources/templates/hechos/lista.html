@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Hechos</title>
+</head>
+<body>
+<!-- Insertamos la barra de navegación que creamos antes -->
+<div th:insert="~{layout/header :: navbar}"></div>
+
+<main>
+    <h2 th:text="${titulo}">Listado de Hechos</h2>
+
+    <div th:if="${hechos.isEmpty()}">
+        <p>No hay hechos para mostrar.</p>
+    </div>
+
+    <table th:unless="${hechos.isEmpty()}" border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Fecha</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="hecho : ${hechos}">
+            <td th:text="${hecho.id}">1</td>
+            <td th:text="${hecho.titulo}">Título de prueba</td>
+            <td th:text="${hecho.categoria}">Categoría</td>
+            <td th:text="${hecho.fecAcontecimiento}">Fecha</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Definimos un fragmento llamado 'navbar' -->
+<header th:fragment="navbar">
+    <nav>
+        <h1>MetaMapa</h1>
+        <hr>
+        <a th:href="@{/metamapa/hechos}">Ver Hechos</a> |
+        <a th:href="@{/metamapa/colecciones}">Ver Colecciones</a> |
+        <a th:href="@{/logout}" style="color: red;">Cerrar Sesión</a>
+        <hr>
+    </nav>
+</header>
+</body>
+</html>

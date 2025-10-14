@@ -28,27 +28,22 @@ public class MetaMapaController {
     private final MetaMapaService metamapaService;
 
     @GetMapping("/hechos")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VISUALIZADOR', 'CONTRIBUYENTE')")
-    public String listarHechos(Model model, Authentication authentication) {
+    public String listarHechos(Model model, Authentication authentication) { // <-- Volvemos a pedir Authentication
         List<HechoDTO> hechos = metamapaService.obtenerTodosLosHechos();
         model.addAttribute("hechos", hechos);
         model.addAttribute("titulo", "Listado de hechos");
         model.addAttribute("totalDeHechos", hechos.size());
-        model.addAttribute("usuario", authentication.getName());
+        model.addAttribute("usuario", authentication.getName()); // <-- Esta línea ahora funcionará
         return "hechos/lista";
     }
 
     @GetMapping("/colecciones")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VISUALIZADOR', 'CONTRIBUYENTE')")
-    public String listarColecciones(Model model, Authentication authentication) {
+    public String listarColecciones(Model model) { // Quitamos Authentication por ahora para simplificar
         List<ColeccionDTO> colecciones = metamapaService.obtenerTodasLasColecciones();
         model.addAttribute("colecciones", colecciones);
-        model.addAttribute("titulo", "Listado de colecciones");
-        model.addAttribute("totalDeColecciones", colecciones.size());
-        model.addAttribute("usuario", authentication.getName());
-        return "colecciones/lista";
+        model.addAttribute("titulo", "Listado de Colecciones");
+        return "colecciones/lista"; // Apunta a la nueva plantilla que vamos a crear
     }
-
     @GetMapping("/colecciones/{id}/hechos")
     @PreAuthorize("hasAnyRole('ADMIN', 'VISUALIZADOR', 'CONTRIBUYENTE')")
     public String listarHechosPorColeccion(@PathVariable("id") Long id, @RequestParam(name = "navegacion", defaultValue = "CURADA") String navegacion, Model model, Authentication authentication) {

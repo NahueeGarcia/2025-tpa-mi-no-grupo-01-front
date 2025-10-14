@@ -1,5 +1,40 @@
 package ar.utn.ba.ddsi.GestionMetaMapa.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                        // Hacemos públicas las rutas de login y los recursos estáticos
+                        .requestMatchers("/login", "/css/**", "/js/**").permitAll()
+                        // Todas las demás rutas requieren que el usuario esté autenticado
+                        .anyRequest().authenticated()
+                )
+                // Ahora Spring ya no interceptará el POST a /login.
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
+                );
+
+        http.csrf(csrf -> csrf.disable());
+
+        return http.build();
+    }
+}
+
+
+
+
+
+/*package ar.utn.ba.ddsi.GestionMetaMapa.config;
+
 import ar.utn.ba.ddsi.GestionMetaMapa.providers.CustomAuthProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +44,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-@EnableMethodSecurity(prePostEnabled = true)
+//@EnableMethodSecurity(prePostEnabled = true) Al comentarla, el SecurityConfig seguirá manejando la autenticación (saber si estás logueado o no), pero ignorará por completo las reglas de
+//     @PreAuthorize("hasAnyRole(...)") en los controladores.
 @Configuration
 public class SecurityConfig {
 
@@ -19,22 +55,8 @@ public class SecurityConfig {
                 .authenticationProvider(provider)
                 .build();
     }
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                                // PERMITE EL ACCESO A TODAS LAS RUTAS TEMPORALMENTE
-                                .anyRequest().permitAll()
-                );
 
-                 // Deshabilita la protección CSRF. Facilita el uso de formularios con POST
-                 // sin necesidad de configurar tokens CSRF por ahora.
-                 http.csrf(csrf -> csrf.disable());
-
-                 return http.build();
-        }
-
-        /* Comentar provisoriamente para probar sin autenticacion
+         Comentar provisoriamente para probar sin autenticacion
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -68,6 +90,6 @@ public class SecurityConfig {
                 );
 
         return http.build();
-    }*/
+    }
 
-}
+}*/
