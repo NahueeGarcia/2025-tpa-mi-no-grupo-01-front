@@ -19,8 +19,22 @@ public class SecurityConfig {
                 .authenticationProvider(provider)
                 .build();
     }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                                // PERMITE EL ACCESO A TODAS LAS RUTAS TEMPORALMENTE
+                                .anyRequest().permitAll()
+                );
 
+                 // Deshabilita la protección CSRF. Facilita el uso de formularios con POST
+                 // sin necesidad de configurar tokens CSRF por ahora.
+                 http.csrf(csrf -> csrf.disable());
 
+                 return http.build();
+        }
+
+        /* Comentar provisoriamente para probar sin autenticacion
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -54,5 +68,6 @@ public class SecurityConfig {
                 );
 
         return http.build();
-    }
+    }*/
+
 }
