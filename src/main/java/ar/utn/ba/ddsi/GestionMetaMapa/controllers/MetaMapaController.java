@@ -28,22 +28,67 @@ public class MetaMapaController {
     private final MetaMapaService metamapaService;
 
     @GetMapping("/hechos")
-    public String listarHechos(Model model, Authentication authentication) { // <-- Volvemos a pedir Authentication
-        List<HechoDTO> hechos = metamapaService.obtenerTodosLosHechos();
-        model.addAttribute("hechos", hechos);
-        model.addAttribute("titulo", "Listado de hechos");
-        model.addAttribute("totalDeHechos", hechos.size());
-        model.addAttribute("usuario", authentication.getName()); // <-- Esta línea ahora funcionará
+    public String listarHechos(Model model,
+                               @RequestParam(name = "page", defaultValue = "0") int page,
+                               @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        // 1. Obtenemos la lista COMPLETA desde el backend (como antes)
+        List<HechoDTO> todosLosHechos = metamapaService.obtenerTodosLosHechos();
+
+        // 2. Calculamos la paginación en el servidor del frontend
+        int totalHechos = todosLosHechos.size();
+        int totalPages = (totalHechos + size - 1) / size; // Cálculo de paginación seguro
+
+        int start = page * size;
+        int end = Math.min(start + size, totalHechos);
+
+        List<HechoDTO> hechosPaginados = List.of();
+        if (start < totalHechos) {
+            hechosPaginados = todosLosHechos.subList(start, end);
+        }
+
+        // 3. Pasamos todos los datos necesarios a la vista
+        model.addAttribute("hechos", hechosPaginados);
+        model.addAttribute("titulo", "Listado de Hechos");
+        model.addAttribute("totalHechos", totalHechos);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pageSize", size);
+
         return "hechos/lista";
     }
 
+
     @GetMapping("/colecciones")
-    public String listarColecciones(Model model) { // Quitamos Authentication por ahora para simplificar
-        List<ColeccionDTO> colecciones = metamapaService.obtenerTodasLasColecciones();
-        model.addAttribute("colecciones", colecciones);
+    public String listarColecciones(Model model,
+                                    @RequestParam(name = "page", defaultValue = "0") int page,
+                                    @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        List<ColeccionDTO> todasLasColecciones = metamapaService.obtenerTodasLasColecciones();
+
+        int totalColecciones = todasLasColecciones.size();
+        int totalPages = (totalColecciones + size - 1) / size;
+
+        int start = page * size;
+        int end = Math.min(start + size, totalColecciones);
+
+        List<ColeccionDTO> coleccionesPaginadas = List.of();
+        if (start < totalColecciones) {
+            coleccionesPaginadas = todasLasColecciones.subList(start, end);
+        }
+
+        model.addAttribute("colecciones", coleccionesPaginadas);
         model.addAttribute("titulo", "Listado de Colecciones");
-        return "colecciones/lista"; // Apunta a la nueva plantilla que vamos a crear
+        model.addAttribute("totalColecciones", totalColecciones);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pageSize", size);
+
+        return "colecciones/lista";
     }
+
+
     @GetMapping("/colecciones/{id}/hechos")
     @PreAuthorize("hasAnyRole('ADMIN', 'VISUALIZADOR', 'CONTRIBUYENTE')")
     public String listarHechosPorColeccion(@PathVariable("id") Long id, @RequestParam(name = "navegacion", defaultValue = "CURADA") String navegacion, Model model, Authentication authentication) {

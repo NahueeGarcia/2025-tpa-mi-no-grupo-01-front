@@ -1,15 +1,40 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <body>
-<!-- Definimos un fragmento llamado 'navbar' -->
+<!-- Definimos el fragmento 'navbar' con los estilos de Bootstrap -->
 <header th:fragment="navbar">
-    <nav>
-        <h1>MetaMapa</h1>
-        <hr>
-        <a th:href="@{/metamapa/hechos}">Ver Hechos</a> |
-        <a th:href="@{/metamapa/colecciones}">Ver Colecciones</a> |
-        <a th:href="@{/logout}" style="color: red;">Cerrar Sesión</a>
-        <hr>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded-4 p-3">
+        <div class="container-fluid">
+            <!-- Logo y Nombre -->
+            <a class="navbar-brand d-flex align-items-center gap-2 fs-4 fw-bold" th:href="@{/}">
+                <i class="bi bi-map-fill fs-2"></i>
+                <span>MetaMapa</span>
+            </a>
+
+            <!-- Botón para menú responsive en móviles -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Contenido del Menú -->
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto d-flex align-items-lg-center gap-3 mt-3 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/metamapa/hechos}">Hechos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/metamapa/colecciones}">Colecciones</a>
+                    </li>
+                    <!-- Aquí podríamos añadir más links en el futuro -->
+                    <li class="nav-item ms-lg-3">
+                        <a th:href="@{/logout}" class="btn btn-outline-light d-flex align-items-center justify-content-center gap-2">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
 </header>
 </body>

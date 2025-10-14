@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/metamapa";
+     @GetMapping("/")
+    public String home(Model model) {
+        model.addAttribute("titulo", "Dashboard");
+        return "dashboard";
     }
-
     @GetMapping("/404")
     public String notFound(Model model) {
         model.addAttribute("titulo", "No encontrado");

@@ -53,7 +53,7 @@ public class LoginController {
             // 4. Guardamos el contexto en la sesión HTTP para que persista
             session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
 
-            return "redirect:/metamapa/hechos";
+            return "redirect:/";
         } else {
             model.addAttribute("error", "Credenciales inválidas");
             return "login";

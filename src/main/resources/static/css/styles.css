@@ -1,0 +1,50 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #d8e9e4;
+    font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+
+/* Estilo para los items placeholder del grid */
+.placeholder-item {
+    aspect-ratio: 4 / 3; /* Proporción para que no sean cuadrados perfectos */
+    background-color: #e0e0e0;
+    border-radius: 0.5rem; /* Coincide con .rounded-2 de Bootstrap */
+    border: 1px solid #cccccc;
+
+    /* Placeholder con las líneas diagonales */
+    background-image:
+            linear-gradient(to top right, transparent calc(50% - 1px), #aaa, transparent calc(50% + 1px)),
+            linear-gradient(to bottom right, transparent calc(50% - 1px), #aaa, transparent calc(50% + 1px));
+}
+
+/* Asegura que la imagen del mapa cubra toda la altura en la columna */
+.object-fit-cover {
+    object-fit: cover;
+}
+
+/* Contenedor para la imagen con una altura fija y controlada */
+.card-img-wrapper {
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Ajusta la imagen dentro del contenedor */
+.card-img-wrapper img {
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
