@@ -25,11 +25,24 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/metamapa/colecciones}">Colecciones</a>
                     </li>
+
+                     <!-- Link al Panel de Administración (solo para admins) -->
+                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                        <a class="nav-link fw-bold text-warning" th:href="@{/admin/panel}">Panel de Admin</a>
+                    </li>
+
                     <!-- Aquí podríamos añadir más links en el futuro -->
-                    <li class="nav-item ms-lg-3">
+                    <!-- Lógica de botones condicional -->
+                    <li class="nav-item ms-lg-3" th:if="${#authentication.name != 'visualizador'}">
                         <a th:href="@{/logout}" class="btn btn-outline-light d-flex align-items-center justify-content-center gap-2">
                             <i class="bi bi-box-arrow-right"></i>
                             <span>Cerrar Sesión</span>
+                        </a>
+                    </li>
+                    <li class="nav-item ms-lg-3" th:if="${#authentication.name == 'visualizador'}">
+                        <a th:href="@{/login}" class="btn btn-light d-flex align-items-center justify-content-center gap-2">
+                            <i class="bi bi-person-circle"></i>
+                            <span>Iniciar Sesión / Registrarse</span>
                         </a>
                     </li>
                 </ul>

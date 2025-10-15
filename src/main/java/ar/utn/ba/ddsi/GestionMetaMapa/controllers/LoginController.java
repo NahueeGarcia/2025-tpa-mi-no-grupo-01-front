@@ -1,10 +1,13 @@
 package ar.utn.ba.ddsi.GestionMetaMapa.controllers;
 
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.AuthResponseDTO;
+import ar.utn.ba.ddsi.GestionMetaMapa.dto.UserRolesPermissionsDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.services.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -13,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class LoginController {
@@ -32,32 +35,21 @@ public class LoginController {
     @PostMapping("/login")
     public String procesarLogin(@RequestParam String username,
                                 @RequestParam String password,
-                                HttpServletRequest request, // Pedimos el objeto request
+                                HttpServletRequest request,
                                 Model model) {
 
         AuthResponseDTO authResponse = loginService.autenticar(username, password);
 
         if (authResponse != null && authResponse.getAccessToken() != null) {
-            // 1. Guardamos el token JWT en la sesión para usarlo en las llamadas a la API
-            HttpSession session = request.getSession();
-            session.setAttribute("jwt_token", authResponse.getAccessToken());
-
-            // 2. Creamos un objeto de autenticación para Spring Security
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    username, null, new ArrayList<>()); // El password es null, los roles vacíos
-
-            // 3. Establecemos este objeto en el contexto de seguridad
-            SecurityContext securityContext = SecurityContextHolder.getContext();
-            securityContext.setAuthentication(authentication);
-
-            // 4. Guardamos el contexto en la sesión HTTP para que persista
-            session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-
-            return "redirect:/";
-        } else {
-            model.addAttribute("error", "Credenciales inválidas");
-            return "login";
+            UserRolesPermissionsDTO rolesDto = loginService.obtenerRolesYPermisos(authResponse.getAccessToken());
+            if (rolesDto != null) {
+                establecerSesionDeSeguridad(request, username, rolesDto.getRol(), authResponse.getAccessToken());
+                return "redirect:/dashboard";
+            }
         }
+
+        model.addAttribute("error", "Credenciales inválidas o error al obtener roles.");
+        return "login";
     }
 
     @GetMapping("/login/visualizador")
@@ -65,26 +57,27 @@ public class LoginController {
         AuthResponseDTO authResponse = loginService.autenticarComoVisualizador();
 
         if (authResponse != null && authResponse.getAccessToken() != null) {
-            // 1. Guardamos el token JWT en la sesión
-            HttpSession session = request.getSession();
-            session.setAttribute("jwt_token", authResponse.getAccessToken());
-
-            // 2. Creamos un objeto de autenticación para Spring Security
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    "visualizador", null, new ArrayList<>());
-
-            // 3. Establecemos la autenticación en el contexto de seguridad
-            SecurityContext securityContext = SecurityContextHolder.getContext();
-            securityContext.setAuthentication(authentication);
-
-            // 4. Guardamos el contexto en la sesión HTTP
-            session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-
-            return "redirect:/"; // Redirigimos a la página principal
-        } else {
-            // Si falla, redirigimos al login con un mensaje de error
-            return "redirect:/login?error=true";
+            UserRolesPermissionsDTO rolesDto = loginService.obtenerRolesYPermisos(authResponse.getAccessToken());
+            if (rolesDto != null) {
+                establecerSesionDeSeguridad(request, "visualizador", rolesDto.getRol(), authResponse.getAccessToken());
+                return "redirect:/dashboard";
+            }
         }
+        return "redirect:/login?error=true";
     }
 
+    private void establecerSesionDeSeguridad(HttpServletRequest request, String username, String rol, String token) {
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + rol));
+
+        HttpSession session = request.getSession();
+        session.setAttribute("jwt_token", token);
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null,
+                authorities);
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+
+        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+    }
 }

@@ -1,17 +1,21 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout(~{::title}, ~{::.content})}">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout(~{::title}, ~{::main})}">
 <head>
-    <title th:text="${titulo}"></title>
+    <title>Panel de Administración</title>
 </head>
 <body>
-<div class="content">
-    <div class="container-fluid">
-        <h1 class="h3 mb-4 text-gray-800" th:text="${titulo}"></h1>
-        <div class="alert alert-info" role="alert">
-            <i class="bi bi-info-circle-fill"></i>
-            Esta es una página de prueba para el panel de administración. Solo los administradores pueden verla.
+<main>
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h1 class="h4 mb-0">Panel de Administración</h1>
+            </div>
+            <div class="card-body">
+                <p class="lead">Esta página solo es visible para usuarios con el rol de Administrador.</p>
+                <p>Aquí irían las herramientas de gestión de colecciones, usuarios, etc.</p>
+            </div>
         </div>
     </div>
-</div>
+</main>
 </body>
 </html>
