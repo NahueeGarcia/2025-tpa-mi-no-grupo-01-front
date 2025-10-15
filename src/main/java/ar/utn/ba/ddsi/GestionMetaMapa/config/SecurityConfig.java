@@ -13,7 +13,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         // Hacemos públicas las rutas de login y los recursos estáticos
-                        .requestMatchers("/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/login", "/login/visualizador", "/css/**", "/js/**").permitAll()
                         // Todas las demás rutas requieren que el usuario esté autenticado
                         .anyRequest().authenticated()
                 )

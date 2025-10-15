@@ -38,5 +38,9 @@ public class LoginService {
             return null;
         }
     }
+        public AuthResponseDTO autenticarComoVisualizador() {
+            // Las credenciales deben coincidir con las del backend
+            return autenticar("visualizador", "visualizador");
+        }
 
 }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout(~{::title}, ~{::.content})}">
+<head>
+    <title th:text="${titulo}"></title>
+</head>
+<body>
+<div class="content">
+    <div class="container-fluid">
+        <h1 class="h3 mb-4 text-gray-800" th:text="${titulo}"></h1>
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle-fill"></i>
+            Esta es una página de prueba para el panel de administración. Solo los administradores pueden verla.
+        </div>
+    </div>
+</div>
+</body>
+</html>

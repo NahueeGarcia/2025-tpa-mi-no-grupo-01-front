@@ -59,4 +59,32 @@ public class LoginController {
             return "login";
         }
     }
+
+    @GetMapping("/login/visualizador")
+    public String loginComoVisualizador(HttpServletRequest request) {
+        AuthResponseDTO authResponse = loginService.autenticarComoVisualizador();
+
+        if (authResponse != null && authResponse.getAccessToken() != null) {
+            // 1. Guardamos el token JWT en la sesión
+            HttpSession session = request.getSession();
+            session.setAttribute("jwt_token", authResponse.getAccessToken());
+
+            // 2. Creamos un objeto de autenticación para Spring Security
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    "visualizador", null, new ArrayList<>());
+
+            // 3. Establecemos la autenticación en el contexto de seguridad
+            SecurityContext securityContext = SecurityContextHolder.getContext();
+            securityContext.setAuthentication(authentication);
+
+            // 4. Guardamos el contexto en la sesión HTTP
+            session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+
+            return "redirect:/"; // Redirigimos a la página principal
+        } else {
+            // Si falla, redirigimos al login con un mensaje de error
+            return "redirect:/login?error=true";
+        }
+    }
+
 }
