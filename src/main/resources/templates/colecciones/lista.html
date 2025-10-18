@@ -13,7 +13,7 @@
 
 <div class="container-xl p-3">
 
-    <div th:insert="~{layout/header :: navbar}"></div>
+    <div th:replace="~{layout/header :: navbar(pageContext='internal')}"></div>
 
     <main class="mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">

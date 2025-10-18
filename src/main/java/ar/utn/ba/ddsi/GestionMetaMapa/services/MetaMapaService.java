@@ -3,73 +3,51 @@ package ar.utn.ba.ddsi.GestionMetaMapa.services;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.ColeccionDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.HechoDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.SolicitudDTO;
-import jakarta.servlet.http.HttpSession; // Importamos HttpSession
-import org.springframework.core.ParameterizedTypeReference;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 @Service
 public class MetaMapaService {
 
-    private final WebClient webClient;
-    private final HttpSession httpSession; // Inyectamos la sesión HTTP
+    private final GestionMetaMapaApiService apiService;
+    private final HttpSession httpSession;
 
-    // Modificamos el constructor para recibir la sesión
-    public MetaMapaService(HttpSession httpSession) {
+    public MetaMapaService(GestionMetaMapaApiService apiService, HttpSession httpSession) {
+        this.apiService = apiService;
         this.httpSession = httpSession;
-        this.webClient = WebClient.builder()
-                .baseUrl("http://localhost:8089/api")
-                .build();
     }
 
     private String getJwtToken() {
-        // Método privado para obtener el token guardado en la sesión
-        return (String) httpSession.getAttribute("jwt_token");
+        return (String) httpSession.getAttribute("accessToken");
     }
 
-    // --- MÉTODO PARA HECHOS (AHORA CON AUTENTICACIÓN) ---
     public List<HechoDTO> obtenerTodosLosHechos() {
-        String token = getJwtToken();
-        if (token == null) {
-            // Si no hay token, no podemos hacer la petición
-            return List.of();
-        }
-
-        Mono<List<HechoDTO>> mono = this.webClient.get()
-                .uri("/hechos")
-                .header("Authorization", "Bearer " + token) // <-- ¡LA LÍNEA CLAVE!
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<HechoDTO>>() {});
-
-        return mono.block();
+        return apiService.obtenerHechos();
     }
 
-    // --- MÉTODO PARA COLECCIONES (TAMBIÉN CON AUTENTICACIÓN) ---
     public List<ColeccionDTO> obtenerTodasLasColecciones() {
-        String token = getJwtToken();
-        if (token == null) {
-            // Si no hay token, no podemos hacer la petición.
-            // Devolver una lista vacía es una forma segura de manejarlo.
-            return List.of();
-        }
-
-        Mono<List<ColeccionDTO>> mono = this.webClient.get()
-                .uri("/colecciones") // Llama a /api/colecciones del Gateway
-                .header("Authorization", "Bearer " + token) // Adjunta el token
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<ColeccionDTO>>() {});
-
-        return mono.block();
+        return apiService.obtenerColecciones();
     }
 
-    // --- OTROS MÉTODOS ---
+    /**
+     * Reincorporado: Obtiene los hechos de una colección específica.
+     * Esta operación requiere que el usuario esté autenticado.
+     */
     public List<HechoDTO> obtenerHechosPorColeccion(Long id, String navegacion) {
-        return List.of();
+        String token = getJwtToken();
+        if (token == null) {
+            // Si no hay usuario logueado, no se puede realizar esta consulta protegida.
+            return List.of();
+        }
+        return apiService.obtenerHechosPorColeccion(id, navegacion, token);
     }
 
     public void crearSolicitudEliminacion(SolicitudDTO solicitud) {
+        String token = getJwtToken();
+        if (token != null) {
+            apiService.crearSolicitud(solicitud, token);
+        }
     }
 }

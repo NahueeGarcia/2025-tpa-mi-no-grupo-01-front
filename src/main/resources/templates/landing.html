@@ -19,24 +19,7 @@
 
 <body>
 <div class="container-xl p-3">
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded-4 p-3">
-            <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center gap-2 fs-4 fw-bold" th:href="@{/}">
-                    <i class="bi bi-map-fill fs-2"></i>
-                    <span>MetaMapa</span>
-                </a>
-                <div class="navbar-nav ms-auto d-flex align-items-lg-center gap-3 mt-3 mt-lg-0">
-                    <!-- RUTA CORREGIDA CON THYMELEAF -->
-                    <a th:href="@{/login/visualizador}" class="btn btn-secondary">Explorar como Visualizador</a>
-                    <a th:href="@{/login}" class="btn btn-light d-flex align-items-center justify-content-center gap-2">
-                        <i class="bi bi-person-circle"></i>
-                        <span>Acceder / Registrarse</span>
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <div th:replace="~{layout/header :: navbar(pageContext='landing')}"></div>
 
     <main class="mt-4">
         <section id="hero" class="text-center p-5 rounded-3 bg-white">

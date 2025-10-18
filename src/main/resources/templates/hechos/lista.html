@@ -15,7 +15,7 @@
 <div class="container-xl p-3">
 
     <!-- 1. Barra de Navegación Profesional -->
-    <div th:insert="~{layout/header :: navbar}"></div>
+    <div th:replace="~{layout/header :: navbar(pageContext='internal')}"></div>
 
     <main class="mt-4">
         <!-- 2. Título y Contador de Hechos -->

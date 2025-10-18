@@ -1,51 +1,61 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <body>
-<!-- Definimos el fragmento 'navbar' con los estilos de Bootstrap -->
-<header th:fragment="navbar">
+<header th:fragment="navbar(pageContext)">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded-4 p-3">
         <div class="container-fluid">
-            <!-- Logo y Nombre -->
             <a class="navbar-brand d-flex align-items-center gap-2 fs-4 fw-bold" th:href="@{/}">
                 <i class="bi bi-map-fill fs-2"></i>
                 <span>MetaMapa</span>
             </a>
-
-            <!-- Botón para menú responsive en móviles -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <!-- Contenido del Menú -->
             <div class="collapse navbar-collapse" id="mainNavbar">
-                <ul class="navbar-nav ms-auto d-flex align-items-lg-center gap-3 mt-3 mt-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/metamapa/hechos}">Hechos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/metamapa/colecciones}">Colecciones</a>
-                    </li>
 
-                     <!-- Link al Panel de Administración (solo para admins) -->
-                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
-                        <a class="nav-link fw-bold text-warning" th:href="@{/admin/panel}">Panel de Admin</a>
-                    </li>
+                <!-- Bloque 1: Botones para usuarios ANÓNIMOS -->
+                <div class="navbar-nav ms-auto d-flex align-items-lg-center gap-3 mt-3 mt-lg-0"
+                     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+                     sec:authorize="isAnonymous()">
 
-                    <!-- Aquí podríamos añadir más links en el futuro -->
-                    <!-- Lógica de botones condicional -->
-                    <li class="nav-item ms-lg-3" th:if="${#authentication.name != 'visualizador'}">
-                        <a th:href="@{/logout}" class="btn btn-outline-light d-flex align-items-center justify-content-center gap-2">
-                            <i class="bi bi-box-arrow-right"></i>
-                            <span>Cerrar Sesión</span>
-                        </a>
-                    </li>
-                    <li class="nav-item ms-lg-3" th:if="${#authentication.name == 'visualizador'}">
-                        <a th:href="@{/login}" class="btn btn-light d-flex align-items-center justify-content-center gap-2">
+                    <!-- Enlaces de navegación públicos para visualizadores -->
+                    <a class="nav-link" th:if="${pageContext != 'landing'}" th:href="@{/dashboard}">Dashboard</a>
+                    <a class="nav-link" th:if="${pageContext != 'landing'}" th:href="@{/metamapa/hechos}">Hechos</a>
+                    <a class="nav-link" th:if="${pageContext != 'landing'}" th:href="@{/metamapa/colecciones}">Colecciones</a>
+
+                    <!-- Botón "Ingresar como Visualizador" solo en la Landing Page -->
+                    <a th:if="${pageContext == 'landing'}" th:href="@{/dashboard}" class="btn btn-secondary">Ingresar como Visualizador</a>
+
+                    <!-- Botón "Acceder" no se muestra en la propia página de login -->
+                    <a th:if="${pageContext != 'login'}" th:href="@{/login}" class="btn btn-light d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Acceder / Registrarse</span>
+                    </a>
+                </div>
+
+                <!-- Bloque 2: Botones para usuarios AUTENTICADOS -->
+                <div class="navbar-nav ms-auto d-flex align-items-lg-center gap-3 mt-3 mt-lg-0"
+                     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+                     sec:authorize="isAuthenticated()">
+
+                    <a class="nav-link" th:href="@{/dashboard}">Dashboard</a>
+                    <a class="nav-link" th:href="@{/metamapa/hechos}">Hechos</a>
+                    <a class="nav-link" th:href="@{/metamapa/colecciones}">Colecciones</a>
+
+                    <a class="nav-link fw-bold text-warning" th:href="@{/admin/panel}" sec:authorize="hasRole('ADMIN')">
+                        <i class="bi bi-shield-lock"></i> Panel de Admin
+                    </a>
+
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-person-circle"></i>
-                            <span>Iniciar Sesión / Registrarse</span>
+                            <span sec:authentication="name"></span>
                         </a>
-                    </li>
-                </ul>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" th:href="@{/logout}">Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
