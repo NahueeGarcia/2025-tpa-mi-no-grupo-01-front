@@ -1,21 +1,87 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout(~{::title}, ~{::main})}">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Panel de Administración</title>
 </head>
 <body>
-<main>
-    <div class="container mt-5">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h1 class="h4 mb-0">Panel de Administración</h1>
+
+<!-- CORRECCIÓN AQUÍ: Añadimos el parámetro pageContext a la llamada del layout -->
+<div th:replace="~{layout/layout :: layout(~{::title}, ~{::main}, 'admin')}">
+    <main>
+        <!-- Este contenido reemplazará el fragmento 'contenido' en layout.html -->
+        <div class="container mt-4">
+            <!-- Mensajes de Feedback (Flash Attributes) -->
+            <div th:if="${mensaje}" class="alert alert-success" role="alert" th:text="${mensaje}"></div>
+            <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+            <h1 class="mb-4">Panel de Administración</h1>
+
+            <!-- Sección de Colecciones -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>Colecciones</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="coleccion : ${colecciones}">
+                            <td th:text="${coleccion.id}">1</td>
+                            <td th:text="${coleccion.titulo}">Título de la Colección</td>
+                            <td th:text="${coleccion.descripcion}">Descripción...</td>
+                            <td>
+                                <!-- Aquí irían botones para editar/ver detalles de la colección -->
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="card-body">
-                <p class="lead">Esta página solo es visible para usuarios con el rol de Administrador.</p>
-                <p>Aquí irían las herramientas de gestión de colecciones, usuarios, etc.</p>
+
+            <!-- Sección de Solicitudes de Eliminación -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>Solicitudes de Eliminación Pendientes</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>ID Solicitud</th>
+                            <th>ID Hecho</th>
+                            <th>Justificación</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="solicitud : ${solicitudes}" th:if="${solicitud.estado == 'PENDIENTE'}">
+                            <td th:text="${solicitud.id}">100</td>
+                            <td th:text="${solicitud.idHecho}">500</td>
+                            <td th:text="${solicitud.justificacion}">Justificación...</td>
+                            <td>
+                                <form th:action="@{/admin/solicitudes/{id}/aprobar(id=${solicitud.id})}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-success">Aprobar</button>
+                                </form>
+                                <form th:action="@{/admin/solicitudes/{id}/rechazar(id=${solicitud.id})}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger">Rechazar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
         </div>
-    </div>
-</main>
+    </main>
+</div>
+
 </body>
 </html>
