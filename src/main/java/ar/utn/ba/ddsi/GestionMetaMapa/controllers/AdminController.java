@@ -1,9 +1,6 @@
 package ar.utn.ba.ddsi.GestionMetaMapa.controllers;
 
-import ar.utn.ba.ddsi.GestionMetaMapa.dto.ColeccionDTO;
-import ar.utn.ba.ddsi.GestionMetaMapa.dto.FuenteDTO;
-import ar.utn.ba.ddsi.GestionMetaMapa.dto.ModificarAlgoritmoDTO;
-import ar.utn.ba.ddsi.GestionMetaMapa.dto.SolicitudEliminacionDTO;
+import ar.utn.ba.ddsi.GestionMetaMapa.dto.*;
 import ar.utn.ba.ddsi.GestionMetaMapa.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,35 +14,52 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')") // Proteger toda la clase
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
     private final AdminService adminService;
 
     @GetMapping("/panel")
     public String panel(Model model) {
-        List<ColeccionDTO> colecciones = adminService.obtenerTodasLasColecciones();
-        List<SolicitudEliminacionDTO> solicitudes =
-                adminService.obtenerSolicitudesDeEliminacion(); // Obtener solicitudes
-        model.addAttribute("colecciones", colecciones);
-        model.addAttribute("solicitudes", solicitudes); // Añadir solicitudes al modelo
+        // Obtenemos el resumen completo en una sola llamada
+        ResumenDashboardDTO resumen = adminService.obtenerResumenDashboard();
+        model.addAttribute("resumen", resumen);
+
+        // También preparamos los objetos para los modales
         model.addAttribute("nuevaFuente", new FuenteDTO());
-        model.addAttribute("modificarAlgoritmo", new ModificarAlgoritmoDTO()); // Para el  formulario de modificar algoritmo
+
         return "admin/panel";
     }
 
+    @GetMapping("/gestionar-colecciones")
+    public String gestionarColecciones(Model model) {
+        List<ColeccionDTO> colecciones = adminService.obtenerTodasLasColecciones();
+        model.addAttribute("colecciones", colecciones);
+        model.addAttribute("nuevaFuente", new FuenteDTO());
+        model.addAttribute("modificarAlgoritmo", new ModificarAlgoritmoDTO());
+        return "admin/gestionar-colecciones"; // Sirve la nueva página de gestión
+    }
+
+    @GetMapping("/gestionar-solicitudes")
+    public String gestionarSolicitudes(Model model) {
+        List<SolicitudEliminacionDTO> solicitudes = adminService.obtenerSolicitudesDeEliminacion();
+        model.addAttribute("solicitudes", solicitudes);
+        return "admin/gestionar-solicitudes"; // Sirve la nueva página de gestión
+    }
+
+    // --- Endpoints de Acciones (POST) ---
+
     @PostMapping("/colecciones/{id}/fuentes/agregar")
     public String agregarFuente(@PathVariable("id") Long coleccionId,
-                                @ModelAttribute("nuevaFuente") FuenteDTO fuenteDTO, // Usar el nombre del atributo del modelo
-                                        RedirectAttributes redirectAttributes) {
+                                @ModelAttribute("nuevaFuente") FuenteDTO fuenteDTO,
+                                RedirectAttributes redirectAttributes) {
         try {
             adminService.agregarFuenteAColeccion(coleccionId, fuenteDTO);
             redirectAttributes.addFlashAttribute("mensaje", "Fuente agregada correctamente.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al agregar la fuente: " +
-                    e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error al agregar la fuente: " + e.getMessage());
         }
-        return "redirect:/admin/panel";
+        return "redirect:/admin/gestionar-colecciones"; // Redirige a la página de gestión
     }
 
     @PostMapping("/colecciones/{id}/fuentes/{fuenteId}/quitar")
@@ -56,39 +70,22 @@ public class AdminController {
             adminService.quitarFuenteDeColeccion(coleccionId, fuenteId);
             redirectAttributes.addFlashAttribute("mensaje", "Fuente quitada correctamente.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al quitar la fuente: " +
-                    e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error al quitar la fuente: " + e.getMessage());
         }
-        return "redirect:/admin/panel";
+        return "redirect:/admin/gestionar-colecciones"; // Redirige a la página de gestión
     }
 
     @PostMapping("/colecciones/{id}/algoritmo/modificar")
     public String modificarAlgoritmo(@PathVariable("id") Long coleccionId,
-                                     @ModelAttribute("modificarAlgoritmo") ModificarAlgoritmoDTO
-                                             dto,
+                                     @ModelAttribute("modificarAlgoritmo") ModificarAlgoritmoDTO dto,
                                      RedirectAttributes redirectAttributes) {
         try {
             adminService.modificarAlgoritmoDeConsenso(coleccionId, dto.getTipo());
             redirectAttributes.addFlashAttribute("mensaje", "Algoritmo modificado correctamente.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al modificar el algoritmo: " +
-                    e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error al modificar el algoritmo: " + e.getMessage());
         }
-        return "redirect:/admin/panel";
-    }
-
-    @PostMapping("/colecciones/{idColeccion}/fuentes/{idFuente}/procesar")
-    public String procesarFuente(@PathVariable("idColeccion") Long coleccionId,
-                                 @PathVariable("idFuente") Long fuenteId,
-                                 RedirectAttributes redirectAttributes) {
-        try {
-            adminService.procesarFuenteDeColeccion(coleccionId, fuenteId);
-            redirectAttributes.addFlashAttribute("mensaje", "Solicitud de procesamiento de fuente enviada.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al procesar la fuente: " +
-                    e.getMessage());
-        }
-        return "redirect:/admin/panel";
+        return "redirect:/admin/gestionar-colecciones"; // Redirige a la página de gestión
     }
 
     @PostMapping("/solicitudes/{id}/aprobar")
@@ -99,7 +96,7 @@ public class AdminController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al aprobar la solicitud: " + e.getMessage());
         }
-        return "redirect:/admin/panel";
+        return "redirect:/admin/gestionar-solicitudes"; // Redirige a la página de gestión
     }
 
     @PostMapping("/solicitudes/{id}/rechazar")
@@ -110,5 +107,11 @@ public class AdminController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al rechazar la solicitud: " + e.getMessage());
         }
-        return "redirect:/admin/panel";
-    }}
+        return "redirect:/admin/gestionar-solicitudes"; // Redirige a la página de gestión
+    }
+
+
+
+
+
+}

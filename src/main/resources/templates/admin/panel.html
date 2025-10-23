@@ -1,84 +1,123 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Panel de Administración</title>
+    <title>Dashboard de Administración</title>
 </head>
 <body>
 
-<!-- CORRECCIÓN AQUÍ: Añadimos el parámetro pageContext a la llamada del layout -->
 <div th:replace="~{layout/layout :: layout(~{::title}, ~{::main}, 'admin')}">
     <main>
-        <!-- Este contenido reemplazará el fragmento 'contenido' en layout.html -->
         <div class="container mt-4">
-            <!-- Mensajes de Feedback (Flash Attributes) -->
-            <div th:if="${mensaje}" class="alert alert-success" role="alert" th:text="${mensaje}"></div>
-            <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+            <h1 class="mb-4">Dashboard de Administración</h1>
 
-            <h1 class="mb-4">Panel de Administración</h1>
+            <!-- Mensajes de Feedback -->
+            <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${mensaje}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
 
-            <!-- Sección de Colecciones -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h2>Colecciones</h2>
+            <div class="row">
+                <!-- Card para Colecciones -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Colecciones</h5>
+                            <p class="card-text display-4" th:text="${resumen.totalColecciones}">0</p>
+                            <a th:href="@{/admin/gestionar-colecciones}" class="btn btn-primary">Gestionar</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Título</th>
-                            <th>Descripción</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="coleccion : ${colecciones}">
-                            <td th:text="${coleccion.id}">1</td>
-                            <td th:text="${coleccion.titulo}">Título de la Colección</td>
-                            <td th:text="${coleccion.descripcion}">Descripción...</td>
-                            <td>
-                                <!-- Aquí irían botones para editar/ver detalles de la colección -->
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+
+                <!-- Card para Hechos -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Hechos Totales</h5>
+                            <p class="card-text display-4" th:text="${resumen.totalHechos}">0</p>
+                            <a href="#" class="btn btn-secondary disabled">Gestionar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card para Fuentes -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Fuentes Registradas</h5>
+                            <p class="card-text display-4" th:text="${resumen.totalFuentes}">0</p>
+                            <a href="#" class="btn btn-secondary disabled">Gestionar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card para Solicitudes de Eliminación -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Solicitudes Pendientes</h5>
+                            <p class="card-text display-4" th:text="${resumen.totalSolicitudesPendientes}">0</p>
+                            <a th:href="@{/admin/gestionar-solicitudes}" class="btn btn-primary">Gestionar</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Sección de Solicitudes de Eliminación -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h2>Solicitudes de Eliminación Pendientes</h2>
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>ID Solicitud</th>
-                            <th>ID Hecho</th>
-                            <th>Justificación</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="solicitud : ${solicitudes}" th:if="${solicitud.estado == 'PENDIENTE'}">
-                            <td th:text="${solicitud.id}">100</td>
-                            <td th:text="${solicitud.idHecho}">500</td>
-                            <td th:text="${solicitud.justificacion}">Justificación...</td>
-                            <td>
-                                <form th:action="@{/admin/solicitudes/{id}/aprobar(id=${solicitud.id})}" method="post" class="d-inline">
-                                    <button type="submit" class="btn btn-sm btn-success">Aprobar</button>
-                                </form>
-                                <form th:action="@{/admin/solicitudes/{id}/rechazar(id=${solicitud.id})}" method="post" class="d-inline">
-                                    <button type="submit" class="btn btn-sm btn-danger">Rechazar</button>
-                                </form>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+            <!-- Sección de Acciones Rápidas -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Acciones Rápidas
+                        </div>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrearFuente">
+                                <i class="bi bi-plus-circle"></i> Crear Nueva Fuente (Dataset)
+                            </button>
+                            <!-- Otros botones de acción rápida podrían ir aquí -->
+                        </div>
+                    </div>
                 </div>
             </div>
 
+        </div>
+
+        <!-- Modal para Crear Fuente de tipo Dataset -->
+        <div class="modal fade" id="modalCrearFuente" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form th:action="@{/admin/fuentes/crear-dataset}" th:object="${nuevaFuente}" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Crear Nueva Fuente de Datos (Dataset)</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Esto registrará una nueva fuente de datos en el sistema. Luego podrás asociarla a una o más colecciones.
+                            </p>
+                            <div class="mb-3">
+                                <label for="fuenteNombre" class="form-label">Nombre Descriptivo</label>
+                                <input type="text" class="form-control" id="fuenteNombre" th:field="*{nombre}" placeholder="Ej:
+Desastres Naturales 2024" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fuentePath" class="form-label">Ruta del Archivo CSV</label>
+                                <input type="text" class="form-control" id="fuentePath" th:field="*{path}" placeholder="Ej:
+C:/data/desastres.csv" required>
+                                <div class="form-text">Ruta absoluta al archivo en el servidor donde corre el microservicio <b>
+                                    agregador</b>.</div>
+                            </div>
+                            <input type="hidden" th:field="*{tipo}" value="dataset" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Crear Fuente</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </main>
 </div>

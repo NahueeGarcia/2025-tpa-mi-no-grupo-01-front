@@ -176,4 +176,12 @@ public class GestionMetaMapaApiService {
                 .bodyToMono(Void.class)
                 .block();
     }
+
+    public ResumenDashboardDTO obtenerResumenDashboard() {
+        String token = getJwtToken();
+         if (token == null) { return new ResumenDashboardDTO(); }
+        return this.webClient.get().uri(metamapaServiceUrl + "/admin/resumen-dashboard")
+                .header("Authorization", "Bearer " + token)
+                .retrieve().bodyToMono(ResumenDashboardDTO.class).block();
+    }
 }

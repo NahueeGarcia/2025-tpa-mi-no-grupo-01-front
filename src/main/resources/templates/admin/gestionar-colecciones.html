@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestionar Colecciones</title>
+</head>
+<body>
+
+<div th:replace="~{layout/layout :: layout(~{::title}, ~{::main}, 'admin')}">
+    <main>
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Gestionar Colecciones</h1>
+                <a th:href="@{/admin/panel}" class="btn btn-secondary">Volver al Dashboard</a>
+            </div>
+
+            <!-- El contenido de la tabla y los modales que te pasé en el mensaje anterior va aquí -->
+            <!-- (Lo incluyo de nuevo para que sea completo) -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>Listado de Colecciones</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Algoritmo</th>
+                                <th>Fuentes</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="coleccion : ${colecciones}">
+                                <td th:text="${coleccion.id}" class="fw-bold">1</td>
+                                <td th:text="${coleccion.titulo}">Título</td>
+                                <td th:text="${coleccion.tipoAlgoritmo ?: 'No asignado'}">MAYORIA_SIMPLE</td>
+                                <td>
+                                    <ul class="list-unstyled mb-0">
+                                        <li th:each="fuente : ${coleccion.fuentes}" class="d-flex justify-content-between
+align-items-center mb-1">
+                                            <span class="badge bg-secondary" th:text="${fuente.nombre}">Fuente</span>
+                                            <form th:action="@{/admin/colecciones/{id}/fuentes/{fuenteId}/quitar(id=${coleccion.id},
+fuenteId=${fuente.id})}" method="post">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger p-0 px-1" title="Quitar
+fuente">&times;</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" th:data-bs-target=
+                                            "'#modalFuente' + ${coleccion.id}">Añadir Fuente</button>
+                                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" th:data-bs-target=
+                                            "'#modalAlgoritmo' + ${coleccion.id}">Cambiar Algoritmo</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modales -->
+            <div th:each="coleccion : ${colecciones}">
+                <!-- Modal para Añadir Fuente -->
+                <div class="modal fade" th:id="'modalFuente' + ${coleccion.id}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form th:action="@{/admin/colecciones/{id}/fuentes/agregar(id=${coleccion.id})}" th:object="${nuevaFuente}"
+                                  method="post">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Añadir Fuente a: <span th:text="${coleccion.titulo}"></span></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="fuenteId" class="form-label">ID de la Fuente</label>
+                                        <input type="number" class="form-control" id="fuenteId" th:field="*{id}" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Añadir</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para Cambiar Algoritmo -->
+                <div class="modal fade" th:id="'modalAlgoritmo' + ${coleccion.id}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form th:action="@{/admin/colecciones/{id}/algoritmo/modificar(id=${coleccion.id})}" th:object=
+                                    "${modificarAlgoritmo}" method="post">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Cambiar Algoritmo para: <span th:text="${coleccion.titulo}"></span></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="tipoAlgoritmo" class="form-label">Algoritmo de Consenso</label>
+                                        <select class="form-select" id="tipoAlgoritmo" th:field="*{tipo}" required>
+                                            <option value="MAYORIA_SIMPLE">Mayoría Simple</option>
+                                            <option value="CONSENSO_ABSOLUTO">Consenso Absoluto</option>
+                                            <option value="MULTIPLES_MENCIONES">Múltiples Menciones</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

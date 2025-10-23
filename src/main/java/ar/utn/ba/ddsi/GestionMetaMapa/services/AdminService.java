@@ -2,6 +2,7 @@ package ar.utn.ba.ddsi.GestionMetaMapa.services;
 
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.ColeccionDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.FuenteDTO;
+import ar.utn.ba.ddsi.GestionMetaMapa.dto.ResumenDashboardDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.SolicitudEliminacionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,10 @@ public class AdminService {
 
     public void rechazarSolicitud(Long solicitudId) {
         apiService.rechazarSolicitud(solicitudId);
+    }
+
+    public ResumenDashboardDTO obtenerResumenDashboard() {
+        return apiService.obtenerResumenDashboard();
     }
 
 }

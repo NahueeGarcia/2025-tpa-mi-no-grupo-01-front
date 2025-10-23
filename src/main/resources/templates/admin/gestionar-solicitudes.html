@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestionar Solicitudes</title>
+</head>
+<body>
+
+<div th:replace="~{layout/layout :: layout(~{::title}, ~{::main}, 'admin')}">
+    <main>
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Gestionar Solicitudes de Eliminación</h1>
+                <a th:href="@{/admin/panel}" class="btn btn-secondary">Volver al Dashboard</a>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>Solicitudes Pendientes</h2>
+                </div>
+                <div class="card-body">
+                    <div th:if="${#lists.isEmpty(solicitudes)}">
+                        <p class="text-muted">No hay solicitudes pendientes.</p>
+                    </div>
+                    <div th:unless="${#lists.isEmpty(solicitudes)}" class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>ID Solicitud</th>
+                                <th>ID Hecho</th>
+                                <th>Justificación</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="solicitud : ${solicitudes}" th:if="${solicitud.estado == 'PENDIENTE'}">
+                                <td th:text="${solicitud.id}">100</td>
+                                <td th:text="${solicitud.idHecho}">500</td>
+                                <td th:text="${solicitud.justificacion}">Justificación...</td>
+                                <td>
+                                    <form th:action="@{/admin/solicitudes/{id}/aprobar(id=${solicitud.id})}" method="post" class=
+                                            "d-inline">
+                                        <button type="submit" class="btn btn-sm btn-success">Aprobar</button>
+                                    </form>
+                                    <form th:action="@{/admin/solicitudes/{id}/rechazar(id=${solicitud.id})}" method="post" class=
+                                            "d-inline">
+                                        <button type="submit" class="btn btn-sm btn-danger">Rechazar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
