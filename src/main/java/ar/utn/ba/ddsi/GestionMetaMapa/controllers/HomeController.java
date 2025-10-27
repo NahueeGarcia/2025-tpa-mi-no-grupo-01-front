@@ -16,6 +16,7 @@ public class HomeController {
     public String dashboard() {
         return "dashboard";
     }
+
     @GetMapping("/404")
     public String notFound(Model model) {
         model.addAttribute("titulo", "No encontrado");

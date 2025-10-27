@@ -41,7 +41,6 @@ public class SecurityConfig {
                         // Se definen las URLs que no requieren ningún tipo de autenticación.
                         .requestMatchers("/", "/login", "/css/**", "/js/**",
                                 "/metamapa/hechos", "/metamapa/colecciones", "/dashboard").permitAll()
-                        // Todas las demás rutas (ej. /dashboard, /admin/panel) requieren autenticación.
                         .anyRequest().authenticated()
                 )
                 // --- FORMULARIO DE LOGIN ---

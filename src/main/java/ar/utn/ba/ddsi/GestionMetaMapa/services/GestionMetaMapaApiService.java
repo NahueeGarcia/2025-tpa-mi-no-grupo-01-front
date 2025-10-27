@@ -19,8 +19,6 @@ public class GestionMetaMapaApiService {
     private final String authServiceUrl;
     private final String metamapaServiceUrl;
 
-    // No inyectamos HttpSession directamente aquí, la obtenemos del RequestContextHolder
-    // para evitar problemas de proxy en entornos de múltiples hilos.
 
     public GestionMetaMapaApiService(
             @Value("${auth.service.url}") String authServiceUrl,
