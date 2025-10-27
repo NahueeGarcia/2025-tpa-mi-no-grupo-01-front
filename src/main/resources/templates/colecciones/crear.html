@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Crear Nueva Colección</title>
+</head>
+<body>
+<div th:replace="~{layout/layout :: layout(~{::title}, ~{::main}, 'admin')}">
+    <main>
+        <div class="container mt-4">
+            <h1>Crear Nueva Colección</h1>
+            <div class="card">
+                <div class="card-body">
+                    <form th:action="@{/admin/colecciones/crear}" th:object="${coleccion}" method="post">
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="titulo" th:field="*{titulo}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" th:field="*{descripcion}" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipoAlgoritmo" class="form-label">Algoritmo de Consenso</label>
+                            <select class="form-select" id="tipoAlgoritmo" th:field="*{tipoAlgoritmo}">
+                                <option value="">Ninguno</option>
+                                <option value="MAYORIA_SIMPLE">Mayoría Simple</option>
+                                <option value="CONSENSO_ABSOLUTO">Consenso Absoluto</option>
+                                <option value="MULTIPLES_MENCIONES">Múltiples Menciones</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Crear Colección</button>
+                        <a th:href="@{/admin/gestionar-colecciones}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

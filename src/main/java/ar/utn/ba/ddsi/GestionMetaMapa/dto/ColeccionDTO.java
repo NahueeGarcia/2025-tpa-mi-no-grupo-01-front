@@ -7,23 +7,16 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 public class ColeccionDTO {
     private Long id;
     private String titulo;
     private String descripcion;
-    private List<HechoDTO> hechos;
+    private String tipoAlgoritmo;
+    private List<FuenteDTO> fuentes; // Usamos el FuenteDTO que ya existe en el frontend
 
-    public static ColeccionDTO toDTO(Long id, String titulo, String descripcion, List<HechoDTO> hechos) {
-        return ColeccionDTO
-                .builder()
-                .id(id)
-                .titulo(titulo)
-                .descripcion(descripcion)
-                .hechos(hechos)
-                .build();
-    }
+
 }

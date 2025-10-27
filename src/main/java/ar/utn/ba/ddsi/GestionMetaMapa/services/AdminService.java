@@ -52,4 +52,8 @@ public class AdminService {
         return apiService.obtenerResumenDashboard();
     }
 
+    public ColeccionDTO crearColeccion(ColeccionDTO dto) {
+        return apiService.crearColeccion(dto);
+    }
+
 }

@@ -111,7 +111,23 @@ public class AdminController {
     }
 
 
+    @GetMapping("/colecciones/nueva")
+    public String mostrarFormularioCrear(Model model) {
+        model.addAttribute("coleccion", new ColeccionDTO());
+        return "colecciones/crear";
+    }
 
+    @PostMapping("/colecciones/crear")
+    public String crearColeccion(@ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+            adminService.crearColeccion(coleccionDTO);
+            redirectAttributes.addFlashAttribute("mensaje", "Colección creada exitosamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al crear la colección: " + e.getMessage());
+        }
+        return "redirect:/admin/gestionar-colecciones";
+    }
 
 
 }
