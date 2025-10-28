@@ -186,14 +186,13 @@ public class GestionMetaMapaApiService {
     public ColeccionDTO crearColeccion(ColeccionDTO dto) {
         String token = getJwtToken();
         if (token == null) { throw new RuntimeException("No autenticado"); }
-        return this.webClient.post().uri(metamapaServiceUrl + "/api/admin/colecciones")
+        return this.webClient.post().uri(metamapaServiceUrl + "/admin/colecciones")
                 .header("Authorization", "Bearer " + token)
                 .bodyValue(dto)
                 .retrieve()
                 .bodyToMono(ColeccionDTO.class)
                 .block();
     }
-
 
 
 }
