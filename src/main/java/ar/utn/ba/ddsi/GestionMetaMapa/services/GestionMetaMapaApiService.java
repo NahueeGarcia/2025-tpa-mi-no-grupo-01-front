@@ -194,5 +194,14 @@ public class GestionMetaMapaApiService {
                 .block();
     }
 
+    public void eliminarColeccion(Long coleccionId) {
+        String token = getJwtToken();
+        if (token == null) { /* Manejar error */ return; }
+        this.webClient.delete().uri(metamapaServiceUrl + "/admin/colecciones/" + coleccionId)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
 
 }

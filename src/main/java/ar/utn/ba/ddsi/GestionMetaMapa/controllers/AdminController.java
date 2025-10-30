@@ -129,5 +129,14 @@ public class AdminController {
         return "redirect:/admin/gestionar-colecciones";
     }
 
-
+    @PostMapping("/colecciones/{id}/eliminar")
+    public String eliminarColeccion(@PathVariable("id") Long coleccionId, RedirectAttributes redirectAttributes) {
+        try {
+            adminService.eliminarColeccion(coleccionId);
+            redirectAttributes.addFlashAttribute("mensaje", "Colección eliminada correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar la colección: " + e.getMessage());
+        }
+        return "redirect:/admin/gestionar-colecciones";
+    }
 }

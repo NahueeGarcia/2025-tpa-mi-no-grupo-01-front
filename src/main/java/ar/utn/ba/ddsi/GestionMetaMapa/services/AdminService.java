@@ -56,4 +56,7 @@ public class AdminService {
         return apiService.crearColeccion(dto);
     }
 
+    public void eliminarColeccion(Long coleccionId) {
+        apiService.eliminarColeccion(coleccionId);
+    }
 }
