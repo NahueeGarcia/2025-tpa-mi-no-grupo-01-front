@@ -50,4 +50,9 @@ public class MetaMapaService {
             apiService.crearSolicitud(solicitud, token);
         }
     }
+
+
+    public HechoDTO obtenerHechoPorId(Long id) {
+        return apiService.obtenerHechoPorId(id);
+    }
 }

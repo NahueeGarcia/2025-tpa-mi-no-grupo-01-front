@@ -204,4 +204,15 @@ public class GestionMetaMapaApiService {
                 .block();
     }
 
+
+
+    public HechoDTO obtenerHechoPorId(Long id) {
+    // Este endpoint es público, no necesita token de autorización
+    return this.webClient.get()
+            .uri(metamapaServiceUrl + "/hechos/" + id)
+            .retrieve()
+            .bodyToMono(HechoDTO.class)
+            .block();
+    }
+
 }

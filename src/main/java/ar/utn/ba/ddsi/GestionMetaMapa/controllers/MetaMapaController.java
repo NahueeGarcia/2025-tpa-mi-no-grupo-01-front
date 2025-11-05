@@ -30,10 +30,23 @@ public class MetaMapaController {
     @GetMapping("/hechos")
     public String listarHechos(Model model,
                                @RequestParam(name = "page", defaultValue = "0") int page,
-                               @RequestParam(name = "size", defaultValue = "10") int size) {
+                               @RequestParam(name = "size", defaultValue = "10") int size,
+                               @RequestParam(required = false) String q) {
+
+
+
 
         // 1. Obtenemos la lista COMPLETA desde el backend (como antes)
         List<HechoDTO> todosLosHechos = metamapaService.obtenerTodosLosHechos();
+
+
+        if (q != null && !q.trim().isEmpty()) {
+            final String queryBusqueda = q.toLowerCase();
+            todosLosHechos = todosLosHechos.stream()
+                    .filter(hecho -> hecho.getTitulo().toLowerCase().contains(queryBusqueda))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
 
         // 2. Calculamos la paginación en el servidor del frontend
         int totalHechos = todosLosHechos.size();
@@ -54,6 +67,7 @@ public class MetaMapaController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("pageSize", size);
+        model.addAttribute("query", q);
 
         return "hechos/lista";
     }
@@ -112,5 +126,25 @@ public class MetaMapaController {
         }
         return "redirect:/metamapa/colecciones";
     }
+
+    @PreAuthorize("permitAll")
+    @GetMapping("/hechos/{id}")
+    public String verDetalleHecho(@PathVariable("id") Long id, Model model) {
+        System.out.println("[DEBUG] MetaMapaController.verDetalleHecho - Petición RECIBIDA para el Hecho ID: " + id);
+        try {
+            HechoDTO hecho = metamapaService.obtenerHechoPorId(id);
+            model.addAttribute("hecho", hecho);
+            System.out.println("[DEBUG] MetaMapaController.verDetalleHecho - Devolviendo vista 'hechos/detalle' para el Hecho: " +
+                    hecho.getTitulo());
+            return "hechos/detalle";
+        } catch (Exception e) {
+            System.err.println("[DEBUG] MetaMapaController.verDetalleHecho - ERROR al obtener el Hecho ID: " + id + ". Causa: " +
+                    e.getMessage());
+                // Manejo básico de error si el hecho no se encuentra
+                return "redirect:/"; // Redirige a la home si hay un error
+        }
+    }
+
+
 }
 

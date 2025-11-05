@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${hecho.titulo}">Detalle del Hecho</title>
+</head>
+<body>
+<div th:replace="~{layout/layout :: layout(~{::title}, ~{::main}, 'public')}">
+    <main>
+        <div class="container mt-4">
+
+            <!-- Detalles del Hecho -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h1 th:text="${hecho.titulo}">Título del Hecho</h1>
+                </div>
+                <div class="card-body">
+                    <p><strong>Categoría:</strong> <span th:text="${hecho.categoria}" class="badge bg-info">Categoría</span></p>
+                    <p><strong>Descripción:</strong></p>
+                    <p th:text="${hecho.descripcion}">Descripción detallada del hecho.</p>
+                    <hr>
+                    <p>Ubicación: <span th:text="'Lat: ' + ${hecho.latitud} + ', Lon: ' + ${hecho.longitud}"></span></p>
+                    <p><strong>Fecha del Acontecimiento:</strong> <span th:text=
+                                                                                "${#temporals.format(hecho.fecAcontecimiento, 'dd/MM/yyyy HH:mm')}">Fecha</span></p>
+                </div>
+                <div class="card-footer text-muted">
+                    Cargado el: <span th:text="${#temporals.format(hecho.fecCarga, 'dd/MM/yyyy')}">Fecha de Carga</span>
+                </div>
+            </div>
+
+            <!-- Formulario para Solicitud de Eliminación -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Solicitar Eliminación de este Hecho</h3>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/solicitudes/crear}" method="post">
+                        <!-- Campo oculto para enviar el ID del hecho -->
+                        <input type="hidden" name="hechoId" th:value="${hecho.id}" />
+
+                        <div class="mb-3">
+                            <label for="motivo" class="form-label">Motivo de la solicitud (mínimo 500
+                                caracteres)</label>
+                            <textarea class="form-control" id="motivo" name="motivo" rows="5" minlength=
+                                    "500" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger">Enviar Solicitud de Eliminación</
+                        button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+</body>
+</html>

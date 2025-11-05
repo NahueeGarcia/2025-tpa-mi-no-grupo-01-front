@@ -36,13 +36,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
                 .authorizeHttpRequests(auth -> auth
-                        // --- RUTAS PÚBLICAS ---
-                        // Se definen las URLs que no requieren ningún tipo de autenticación.
-                        .requestMatchers("/", "/login", "/css/**", "/js/**",
-                                "/metamapa/hechos", "/metamapa/colecciones", "/dashboard").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/login",
+                                "/css/**",
+                                "/js/**",
+                                "/dashboard",
+                                "/metamapa/colecciones",
+                                "/metamapa/hechos",      // Permite la lista de hechos
+                                "/metamapa/hechos/**",
+                                "/hechos/**" // Permite /metamapa/hechos/ CUALQUIER COSA
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
+
+
+
+
                 // --- FORMULARIO DE LOGIN ---
                 // Se le delega a Spring Security el manejo del formulario de login.
                 .formLogin(form -> form

@@ -31,6 +31,15 @@
                     <p class="text-center text-muted">No hay hechos para mostrar en esta página.</p>
                 </div>
 
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <form th:action="@{/metamapa/hechos}" method="get" class="d-flex">
+                            <input class="form-control me-2" type="search" placeholder="Buscar por título..." name="q" th:value="${query}">
+                            <button class="btn btn-outline-primary" type="submit">Buscar</button>
+                        </form>
+                    </div>
+                </div>
+
                 <!-- 3. Tabla de Hechos Estilizada -->
                 <table class="table table-hover align-middle" th:unless="${hechos.isEmpty()}">
                     <thead class="table-dark">
@@ -44,7 +53,7 @@
                     <tbody>
                     <tr th:each="hecho : ${hechos}">
                         <td th:text="${hecho.id}"></td>
-                        <td th:text="${hecho.titulo}"></td>
+                        <td><a th:href="@{/metamapa/hechos/{id}(id=${hecho.id})}" th:text="${hecho.titulo}"></a></td>
                         <td><span class="badge bg-secondary fw-normal" th:text="${hecho.categoria}"></span></td>
                         <td th:text="${#temporals.format(hecho.fecAcontecimiento, 'dd/MM/yyyy HH:mm')}"></td>
                     </tr>

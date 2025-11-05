@@ -58,7 +58,7 @@ fuente">&times;</button>
                                             "'#modalFuente' + ${coleccion.id}">Añadir Fuente</button>
                                     <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" th:data-bs-target=
                                             "'#modalAlgoritmo' + ${coleccion.id}">Cambiar Algoritmo</button>
-
+                                    <a th:href="@{/admin/colecciones/{id}/editar(id=${coleccion.id})}" class="btn btn-sm btn-warning">Editar</a>
                                     <form th:action="@{/admin/colecciones/{id}/eliminar(id=${coleccion.id})}" method="post" class="d-inline" onsubmit="return confirm('¿Está seguro de que desea eliminar esta colección?');">
                                         <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
                                      </form>
