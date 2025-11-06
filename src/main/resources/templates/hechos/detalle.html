@@ -38,15 +38,32 @@
                         <input type="hidden" name="hechoId" th:value="${hecho.id}" />
 
                         <div class="mb-3">
-                            <label for="motivo" class="form-label">Motivo de la solicitud (mínimo 500
-                                caracteres)</label>
-                            <textarea class="form-control" id="motivo" name="motivo" rows="5" minlength=
-                                    "500" required></textarea>
+                            <label for="motivo" class="form-label">Motivo de la solicitud</label>
+                            <textarea class="form-control" id="motivo" name="motivo" rows="5"></textarea>
+                            <small id="char-counter" class="form-text text-muted">0 caracteres</small>
                         </div>
 
-                        <button type="submit" class="btn btn-danger">Enviar Solicitud de Eliminación</
-                        button>
+                        <button type="submit" class="btn btn-danger">Enviar Solicitud de Eliminación</button>
                     </form>
+
+                    <script>
+                        const motivoTextarea = document.getElementById('motivo');
+                        const charCounter = document.getElementById('char-counter');
+                        const minChars = 500;
+
+                        motivoTextarea.addEventListener('input', () => {
+                            const currentCharCount = motivoTextarea.value.length;
+                            charCounter.textContent = currentCharCount + ' caracteres';
+
+                            if (currentCharCount < minChars) {
+                                charCounter.classList.remove('text-success');
+                                charCounter.classList.add('text-danger');
+                            } else {
+                                charCounter.classList.remove('text-danger');
+                                charCounter.classList.add('text-success');
+                            }
+                        });
+                    </script>
                 </div>
             </div>
 

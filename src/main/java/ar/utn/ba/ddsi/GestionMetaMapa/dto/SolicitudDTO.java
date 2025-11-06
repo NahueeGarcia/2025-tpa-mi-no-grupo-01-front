@@ -18,8 +18,9 @@ public class SolicitudDTO {
     private Long idContribuyente;
     private Long idAdministrador;
     private LocalDateTime fechaCreacion;
+    private String userRole; // Nuevo campo
 
-    public static SolicitudDTO toDTO(Long id, String motivo, Long hechoId, Long idContribuyente, Long idAdministrador) {
+    public static SolicitudDTO toDTO(Long id, String motivo, Long hechoId, Long idContribuyente, Long idAdministrador, String userRole) {
         return SolicitudDTO
                 .builder()
                 .id(id)
@@ -27,6 +28,7 @@ public class SolicitudDTO {
                 .hechoId(hechoId)
                 .idContribuyente(idContribuyente)
                 .idAdministrador(idAdministrador)
+                .userRole(userRole) // Asignar el nuevo campo
                 .build();
     }
 }
