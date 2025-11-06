@@ -45,10 +45,19 @@ public class MetaMapaService {
     }
 
     public void crearSolicitudEliminacion(SolicitudDTO solicitud) {
-        String token = getJwtToken();
-        if (token != null) {
-            apiService.crearSolicitud(solicitud, token);
-        }
+
+        String token = null;
+
+
+        //String token = getJwtToken();
+        //if (token != null) {
+        //    apiService.crearSolicitud(solicitud, token);
+        //}
+        System.out.println("[DEBUG] Enviando solicitud de eliminación al backend para Hecho ID: " + solicitud.getHechoId());
+
+        apiService.crearSolicitud(solicitud, token);
+
+        System.out.println("[DEBUG] Solicitud enviada al backend sin errores en el frontend.");
     }
 
 

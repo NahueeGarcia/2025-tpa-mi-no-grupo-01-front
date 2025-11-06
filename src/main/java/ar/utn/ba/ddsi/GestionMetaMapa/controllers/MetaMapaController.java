@@ -115,7 +115,7 @@ public class MetaMapaController {
     }
 
     @PostMapping("/solicitudes-eliminacion")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VISUALIZADOR', 'CONTRIBUYENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VISUALIZADOR', 'CONTRIBUYENTE') or isAnonymous()")
     public String crearSolicitudEliminacion(@ModelAttribute SolicitudDTO solicitud, RedirectAttributes redirectAttrs) {
         try {
             metamapaService.crearSolicitudEliminacion(solicitud);
@@ -124,7 +124,7 @@ public class MetaMapaController {
             log.error("Error al crear la solicitud de eliminación", e);
             redirectAttrs.addFlashAttribute("error", "Error al crear la solicitud de eliminación.");
         }
-        return "redirect:/metamapa/colecciones";
+        return "redirect:/metamapa/hechos";
     }
 
     @PreAuthorize("permitAll")

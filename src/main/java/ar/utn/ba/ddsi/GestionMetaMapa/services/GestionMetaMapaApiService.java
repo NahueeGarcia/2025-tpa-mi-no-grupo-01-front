@@ -80,10 +80,20 @@ public class GestionMetaMapaApiService {
     }
 
     public void crearSolicitud(SolicitudDTO solicitudDTO, String accessToken) {
-        this.webClient.post().uri(metamapaServiceUrl + "/solicitudes-eliminacion")
-                .header("Authorization", "Bearer " + accessToken)
-                .bodyValue(solicitudDTO)
-                .retrieve().bodyToMono(Void.class).block();
+        // 1. Construir la petición POST base
+        WebClient.RequestHeadersSpec<?> requestSpec = this.webClient.post()
+                .uri(metamapaServiceUrl + "/solicitudes-eliminacion")
+                .bodyValue(solicitudDTO);
+
+        // 2. Añadir la cabecera de autorización SÓLO si el token no es nulo
+        if (accessToken != null && !accessToken.isBlank()) {
+            requestSpec.header("Authorization", "Bearer " + accessToken);
+        }
+
+        // 3. Ejecutar la petición
+        requestSpec.retrieve()
+                   .bodyToMono(Void.class)
+                   .block();
     }
 
     // --- MÉTODOS DE ADMINISTRACIÓN ---

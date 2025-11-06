@@ -33,7 +33,7 @@
                     <h3>Solicitar Eliminación de este Hecho</h3>
                 </div>
                 <div class="card-body">
-                    <form th:action="@{/solicitudes/crear}" method="post">
+                    <form th:action="@{/metamapa/solicitudes-eliminacion}" method="post">
                         <!-- Campo oculto para enviar el ID del hecho -->
                         <input type="hidden" name="hechoId" th:value="${hecho.id}" />
 

@@ -47,7 +47,8 @@ public class SecurityConfig {
                                 "/metamapa/colecciones",
                                 "/metamapa/hechos",      // Permite la lista de hechos
                                 "/metamapa/hechos/**",
-                                "/hechos/**" // Permite /metamapa/hechos/ CUALQUIER COSA
+                                "/hechos/**" ,
+                                "/metamapa/solicitudes-eliminacion" // Permite /metamapa/hechos/ CUALQUIER COSA
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

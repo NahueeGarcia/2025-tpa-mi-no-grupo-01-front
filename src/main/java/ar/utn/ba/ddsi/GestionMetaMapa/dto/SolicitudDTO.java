@@ -14,17 +14,17 @@ import java.time.LocalDateTime;
 public class SolicitudDTO {
     private Long id;
     private String motivo;
-    private Long idHecho;
+    private Long hechoId;
     private Long idContribuyente;
     private Long idAdministrador;
     private LocalDateTime fechaCreacion;
 
-    public static SolicitudDTO toDTO(Long id, String motivo, Long idHecho, Long idContribuyente, Long idAdministrador) {
+    public static SolicitudDTO toDTO(Long id, String motivo, Long hechoId, Long idContribuyente, Long idAdministrador) {
         return SolicitudDTO
                 .builder()
                 .id(id)
                 .motivo(motivo)
-                .idHecho(idHecho)
+                .hechoId(hechoId)
                 .idContribuyente(idContribuyente)
                 .idAdministrador(idAdministrador)
                 .build();

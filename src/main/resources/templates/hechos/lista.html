@@ -106,7 +106,46 @@ currentPage + 2) )}" th:classappend="${i == currentPage} ? 'active'">
 
 </div>
 
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="confirmacionModal" tabindex="-1" aria-labelledby="confirmacionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmacionModalLabel">Confirmación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-body-mensaje">
+                <!-- El mensaje de éxito o error se insertará aquí -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+    const mensaje = /*[[${mensaje}]]*/ null;
+    const error = /*[[${error}]]*/ null;
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        if (mensaje) {
+            const confirmacionModal = new bootstrap.Modal(document.getElementById('confirmacionModal'));
+            document.getElementById('modal-body-mensaje').innerText = mensaje;
+            confirmacionModal.show();
+        } else if (error) {
+            const confirmacionModal = new bootstrap.Modal(document.getElementById('confirmacionModal'));
+            document.getElementById('modal-body-mensaje').innerText = error;
+            // Opcional: cambiar el color del header para errores
+            document.querySelector('#confirmacionModal .modal-header').classList.add('bg-danger', 'text-white');
+            confirmacionModal.show();
+        }
+    });
+/*]]>*/
+</script>
 
 </body>
 </html>
