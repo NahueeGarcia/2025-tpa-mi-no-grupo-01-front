@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mapa de Hechos</title>
+</head>
+<body>
+
+<div th:replace="~{layout/layout :: layout(titulo='Mapa de Hechos', contenido=~{::mapaContenido}, pageContext='mapa')}">
+
+    <th:block th:fragment="mapaContenido">
+
+        <!-- Inclusión de CSS de Leaflet -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+              integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+              crossorigin=""/>
+
+        <style>
+            #mapid { height: 600px; }
+        </style>
+
+        <h1 class="mb-4">Mapa de Hechos</h1>
+
+        <!--  Contenedor del mapa -->
+        <div id="mapid" class="rounded shadow"></div>
+
+        <!--  Inclusión de JS de Leaflet -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+                crossorigin=""></script>
+
+        <!--  Script para inicializar el mapa y añadir marcadores -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            const hechos = /*[[${hechos}]]*/ [];
+
+            const map = L.map('mapid').setView([-34.6037, -58.3816], 10);
+
+            // Añadimos la capa de tiles de OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Iteramos sobre los hechos y añadimos los marcadores
+            hechos.forEach(hecho => {
+                // Verificamos que el hecho tenga latitud y longitud, y que no sean nulas o vacías
+                if (hecho.latitud && hecho.longitud && hecho.latitud.trim() !== '' && hecho.longitud.trim() !== '') {
+                    try {
+                        const lat = parseFloat(hecho.latitud);
+                        const lon = parseFloat(hecho.longitud);
+
+                        // Verificamos que la conversión a número sea exitosa
+                        if (!isNaN(lat) && !isNaN(lon)) {
+                            const marker = L.marker([lat, lon]).addTo(map);
+
+                            // Añadimos un popup con el título del hecho
+                            marker.bindPopup(`<b>${hecho.titulo}</b><br><a href="/metamapa/hechos/${hecho.id}">Ver detalle</a>`);
+                        }
+                    } catch (e) {
+                        console.error("Error al parsear latitud/longitud para el hecho:", hecho.titulo, e);
+                    }
+                }
+            });
+
+            /*]]>*/
+        </script>
+
+    </th:block>
+
+</div>
+
+</body>
+</html>

@@ -22,6 +22,7 @@
                     <a class="nav-link" th:if="${pageContext != 'landing'}" th:href="@{/dashboard}">Dashboard</a>
                     <a class="nav-link" th:if="${pageContext != 'landing'}" th:href="@{/metamapa/hechos}">Hechos</a>
                     <a class="nav-link" th:if="${pageContext != 'landing'}" th:href="@{/metamapa/colecciones}">Colecciones</a>
+                    <a class="nav-link" th:if="${pageContext != 'landing'}" th:href="@{/metamapa/mapa}">Mapa</a>
 
                     <!-- Botón "Ingresar como Visualizador" solo en la Landing Page -->
                     <a th:if="${pageContext == 'landing'}" th:href="@{/dashboard}" class="btn btn-secondary">Ingresar como Visualizador</a>
@@ -41,6 +42,7 @@
                     <a class="nav-link" th:href="@{/dashboard}">Dashboard</a>
                     <a class="nav-link" th:href="@{/metamapa/hechos}">Hechos</a>
                     <a class="nav-link" th:href="@{/metamapa/colecciones}">Colecciones</a>
+                    <a class="nav-link" th:href="@{/metamapa/mapa}">Mapa</a>
 
                     <a class="nav-link fw-bold text-warning" th:href="@{/admin/panel}" sec:authorize="hasRole('ADMIN')">
                         <i class="bi bi-shield-lock"></i> Panel de Admin

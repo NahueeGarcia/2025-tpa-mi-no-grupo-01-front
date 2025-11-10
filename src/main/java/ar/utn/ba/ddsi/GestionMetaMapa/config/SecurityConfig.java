@@ -48,6 +48,8 @@ public class SecurityConfig {
                                 "/metamapa/hechos",      // Permite la lista de hechos
                                 "/metamapa/hechos/**",
                                 "/hechos/**" ,
+                                "/mapa/vista",
+                                "/metamapa/mapa/**",
                                 "/metamapa/solicitudes-eliminacion" // Permite /metamapa/hechos/ CUALQUIER COSA
                         ).permitAll()
                         .anyRequest().authenticated()

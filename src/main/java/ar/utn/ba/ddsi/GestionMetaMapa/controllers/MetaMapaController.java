@@ -146,5 +146,14 @@ public class MetaMapaController {
     }
 
 
+    @GetMapping("/mapa")
+    public String verMapaDeHechos(Model model) {
+        List<HechoDTO> todosLosHechos = metamapaService.obtenerTodosLosHechos();
+        model.addAttribute("hechos", todosLosHechos);
+        model.addAttribute("titulo", "Mapa de Hechos");
+        return "mapa/vista";
+    }
+
+
 }
 
