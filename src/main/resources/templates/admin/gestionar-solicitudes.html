@@ -33,10 +33,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="solicitud : ${solicitudes}" th:if="${solicitud.estado == 'PENDIENTE'}">
+                            <tr th:each="solicitud : ${solicitudes}" th:if="${solicitud.estado == 'SIN_REVISAR'}">
                                 <td th:text="${solicitud.id}">100</td>
                                 <td th:text="${solicitud.idHecho}">500</td>
-                                <td th:text="${solicitud.justificacion}">Justificación...</td>
+                                <td th:text="${solicitud.motivo}">Justificación...</td>
                                 <td>
                                     <form th:action="@{/admin/solicitudes/{id}/aprobar(id=${solicitud.id})}" method="post" class=
                                             "d-inline">
