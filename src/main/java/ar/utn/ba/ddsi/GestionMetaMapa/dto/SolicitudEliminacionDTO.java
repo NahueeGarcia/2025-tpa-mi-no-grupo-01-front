@@ -11,9 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SolicitudEliminacionDTO {
     private Long id;
-    private Long idHecho;
     private String motivo;
-    private LocalDateTime fechaCreacion;
-    private String estado; // Ej. "PENDIENTE", "APROBADA", "RECHAZADA"
-    private String nombreUsuario; // Opcional, si se quiere mostrar quién la solicitó
+    private Long idHecho;
+    private String estado;
 }
