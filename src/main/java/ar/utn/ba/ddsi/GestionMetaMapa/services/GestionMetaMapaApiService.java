@@ -79,7 +79,7 @@ public class GestionMetaMapaApiService {
                 .block();
     }
 
-    public void crearSolicitud(SolicitudDTO solicitudDTO, String accessToken) {
+    public void crearSolicitud(SolicitudEliminacionDTO solicitudDTO, String accessToken) {
         // 1. Construir la petición POST base
         WebClient.RequestHeadersSpec<?> requestSpec = this.webClient.post()
                 .uri(metamapaServiceUrl + "/solicitudes-eliminacion")

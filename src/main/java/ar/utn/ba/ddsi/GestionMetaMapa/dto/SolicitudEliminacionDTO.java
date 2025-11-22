@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 public class SolicitudEliminacionDTO {
     private Long id;
     private String motivo;
-    private Long idHecho;
+    private Long hechoId;
     private String estado;
 }

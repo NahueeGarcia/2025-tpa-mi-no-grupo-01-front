@@ -3,6 +3,7 @@ package ar.utn.ba.ddsi.GestionMetaMapa.services;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.ColeccionDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.HechoDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.SolicitudDTO;
+import ar.utn.ba.ddsi.GestionMetaMapa.dto.SolicitudEliminacionDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class MetaMapaService {
         return apiService.obtenerHechosPorColeccion(id, navegacion, token);
     }
 
-    public void crearSolicitudEliminacion(SolicitudDTO solicitud) {
+    public void crearSolicitudEliminacion(SolicitudEliminacionDTO solicitud){
 
         String token = null;
 

@@ -1,5 +1,6 @@
 package ar.utn.ba.ddsi.GestionMetaMapa.controllers;
 
+import ar.utn.ba.ddsi.GestionMetaMapa.dto.SolicitudEliminacionDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.exceptions.NotFoundException;
 import ar.utn.ba.ddsi.GestionMetaMapa.exceptions.ValidationException;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.HechoDTO;
@@ -116,7 +117,7 @@ public class MetaMapaController {
 
     @PostMapping("/solicitudes-eliminacion")
     @PreAuthorize("hasAnyRole('ADMIN', 'VISUALIZADOR', 'CONTRIBUYENTE') or isAnonymous()")
-    public String crearSolicitudEliminacion(@ModelAttribute SolicitudDTO solicitud, RedirectAttributes redirectAttrs) {
+    public String crearSolicitudEliminacion(@ModelAttribute SolicitudEliminacionDTO solicitud, RedirectAttributes redirectAttrs) {
         try {
             metamapaService.crearSolicitudEliminacion(solicitud);
             redirectAttrs.addFlashAttribute("mensaje", "Solicitud de eliminación creada correctamente.");
