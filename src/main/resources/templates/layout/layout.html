@@ -15,6 +15,16 @@
 <div th:replace="~{layout/header :: navbar(pageContext=${pageContext})}"></div>
 
 <main class="container mt-4">
+    <!-- Contenedor para mostrar mensajes flash (éxito/error) -->
+    <div th:if="${mensaje != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${mensaje}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
     <!-- El contenido de cada página se insertará aquí -->
     <div th:replace="${contenido}">
         <h1>Contenido principal va aquí</h1>
