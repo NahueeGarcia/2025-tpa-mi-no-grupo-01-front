@@ -42,11 +42,11 @@
                                 <td th:text="${coleccion.tipoAlgoritmo ?: 'No asignado'}">MAYORIA_SIMPLE</td>
                                 <td>
                                     <ul class="list-unstyled mb-0">
-                                        <li th:each="fuente : ${coleccion.fuentes}" class="d-flex justify-content-between
-align-items-center mb-1">
-                                            <span class="badge bg-secondary" th:text="${fuente.nombre}">Fuente</span>
+                                        <li th:each="fuente : ${coleccion.fuentes}">
+                                            <span class="badge bg-secondary" th:text="${fuente.id}">ID Fuente</span>
                                             <form th:action="@{/admin/colecciones/{id}/fuentes/{fuenteId}/quitar(id=${coleccion.id},
-fuenteId=${fuente.id})}" method="post">
+fuenteId=${fuente.id})}" method="post" class="d-inline ms-2">
+                                                <input type="hidden" name="_method" value="delete" />
                                                 <button type="submit" class="btn btn-sm btn-outline-danger p-0 px-1" title="Quitar
 fuente">&times;</button>
                                             </form>
