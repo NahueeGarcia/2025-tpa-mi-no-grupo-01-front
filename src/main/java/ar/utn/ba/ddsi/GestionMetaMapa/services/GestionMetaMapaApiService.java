@@ -262,6 +262,17 @@ public class GestionMetaMapaApiService {
                 .block();
     }
 
+    public void eliminarFuente(Long fuenteId) {
+        String token = getJwtToken();
+        if (token == null) { throw new RuntimeException("No autenticado"); }
+        this.webClient.delete()
+                .uri(metamapaServiceUrl + "/api/admin/fuentes/{id}", fuenteId)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
     public HechoDTO obtenerHechoPorId(Long id) {
         // Este endpoint es público, no necesita token de autorización
         return this.webClient.get()

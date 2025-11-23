@@ -28,6 +28,7 @@
                                     <th>Nombre</th>
                                     <th>Tipo</th>
                                     <th>Detalle (Path/Info)</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,6 +41,12 @@
                                               th:text="${fuente.tipo}">dataset</span>
                                     </td>
                                     <td th:text="${fuente.path}" style="word-break: break-all;">C:/data/test.csv</td>
+                                    <td>
+                                        <form th:action="@{/admin/fuentes/{id}/eliminar(id=${fuente.id})}" method="post" onsubmit="return confirm('¿Está seguro de que desea eliminar esta fuente?');">
+                                            <input type="hidden" name="_method" value="delete" />
+                                            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

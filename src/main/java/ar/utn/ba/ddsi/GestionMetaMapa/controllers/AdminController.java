@@ -34,10 +34,12 @@ public class AdminController {
     @GetMapping("/gestionar-colecciones")
     public String gestionarColecciones(Model model) {
         List<ColeccionDTO> colecciones = adminService.obtenerTodasLasColecciones();
+        List<FuenteDTO> todasLasFuentes = adminService.obtenerTodasLasFuentes(); // <-- NUEVA LÍNEA
         model.addAttribute("colecciones", colecciones);
+        model.addAttribute("todasLasFuentes", todasLasFuentes); // <-- NUEVA LÍNEA
         model.addAttribute("nuevaFuente", new FuenteDTO());
         model.addAttribute("modificarAlgoritmo", new ModificarAlgoritmoDTO());
-        return "admin/gestionar-colecciones"; // Sirve la nueva página de gestión
+        return "admin/gestionar-colecciones";
     }
 
     @GetMapping("/gestionar-solicitudes")
@@ -189,5 +191,16 @@ public class AdminController {
         List<FuenteDTO> fuentes = adminService.obtenerTodasLasFuentes();
         model.addAttribute("fuentes", fuentes);
         return "admin/gestionar-fuentes";
+    }
+
+    @DeleteMapping("/fuentes/{id}/eliminar")
+    public String eliminarFuente(@PathVariable("id") Long fuenteId, RedirectAttributes redirectAttributes) {
+        try {
+            adminService.eliminarFuente(fuenteId);
+            redirectAttributes.addFlashAttribute("mensaje", "Fuente eliminada correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar la fuente: " + e.getMessage());
+        }
+        return "redirect:/admin/gestionar-fuentes";
     }
 }

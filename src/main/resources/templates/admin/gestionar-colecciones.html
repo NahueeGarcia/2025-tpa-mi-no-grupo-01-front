@@ -84,8 +84,13 @@ fuente">&times;</button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="fuenteId" class="form-label">ID de la Fuente</label>
-                                        <input type="number" class="form-control" id="fuenteId" th:field="*{id}" required>
+                                        <label for="fuenteId" class="form-label">Fuente a Añadir</label>
+                                        <select class="form-select" id="fuenteId" th:field="*{id}" required>
+                                            <option value="">-- Seleccione una fuente --</option>
+                                            <option th:each="fuenteDisponible : ${todasLasFuentes}"
+                                                    th:value="${fuenteDisponible.id}"
+                                                    th:text="${fuenteDisponible.nombre} + ' (ID: ' + ${fuenteDisponible.id} + ')'"></option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="modal-footer">

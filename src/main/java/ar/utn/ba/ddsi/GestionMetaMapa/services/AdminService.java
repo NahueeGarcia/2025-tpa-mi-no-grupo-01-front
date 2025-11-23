@@ -75,4 +75,8 @@ public class AdminService {
     public List<FuenteDTO> obtenerTodasLasFuentes() {
         return apiService.obtenerTodasLasFuentes();
     }
+
+    public void eliminarFuente(Long fuenteId) {
+        apiService.eliminarFuente(fuenteId);
+    }
 }

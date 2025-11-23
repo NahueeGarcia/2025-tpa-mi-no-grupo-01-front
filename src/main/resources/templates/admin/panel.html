@@ -75,7 +75,7 @@
                         </div>
                         <div class="card-body">
                             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrearFuente">
-                                <i class="bi bi-plus-circle"></i> Crear Nueva Fuente (Dataset)
+                                <i class="bi bi-plus-circle"></i> Crear Nueva Fuente
                             </button>
                             <!-- Otros botones de acción rápida podrían ir aquí -->
                         </div>
@@ -95,21 +95,26 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Esto registrará una nueva fuente de datos en el sistema. Luego podrás asociarla a una o más colecciones.
-                            </p>
+                            <div class="mb-3">
+                                <label for="fuenteTipo" class="form-label">Tipo de Fuente</label>
+                                <select class="form-select" id="fuenteTipo" th:field="*{tipo}" onchange="toggleFuenteFields()">
+                                    <option value="">-- Seleccione un tipo --</option>
+                                    <option value="dataset">Dataset (desde archivo CSV)</option>
+                                    <option value="manual">Carga Manual</option>
+                                </select>
+                            </div>
                             <div class="mb-3">
                                 <label for="fuenteNombre" class="form-label">Nombre Descriptivo</label>
-                                <input type="text" class="form-control" id="fuenteNombre" th:field="*{nombre}" placeholder="Ej:
-Desastres Naturales 2024" required>
+                                <input type="text" class="form-control" id="fuenteNombre" th:field="*{nombre}" required>
                             </div>
-                            <div class="mb-3">
-                                <label for="fuentePath" class="form-label">Ruta del Archivo CSV</label>
-                                <input type="text" class="form-control" id="fuentePath" th:field="*{path}" placeholder="Ej:
-C:/data/desastres.csv" required>
-                                <div class="form-text">Ruta absoluta al archivo en el servidor donde corre el microservicio <b>
-                                    agregador</b>.</div>
+                            <!-- Campos específicos para Dataset -->
+                            <div id="dataset-fields" style="display: none;">
+                                <div class="mb-3">
+                                    <label for="fuentePath" class="form-label">Ruta del Archivo CSV</label>
+                                    <input type="text" class="form-control" id="fuentePath" th:field="*{path}" placeholder="Ej: C:/data/desastres.csv">
+                                    <div class="form-text">Ruta absoluta al archivo en el servidor del <b>agregador</b>.</div>
+                                </div>
                             </div>
-                            <input type="hidden" name="tipo" value="dataset" />
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -119,6 +124,24 @@ C:/data/desastres.csv" required>
                 </div>
             </div>
         </div>
+        <script th:inline="javascript">
+            function toggleFuenteFields() {
+                const tipo = document.getElementById('fuenteTipo').value;
+                const datasetFields = document.getElementById('dataset-fields');
+                const pathInput = document.getElementById('fuentePath');
+
+                if (tipo === 'dataset') {
+                    datasetFields.style.display = 'block';
+                    pathInput.required = true;
+                } else {
+                    datasetFields.style.display = 'none';
+                    pathInput.required = false;
+                }
+            }
+            // Llamar a la función al cargar por si hay un valor pre-seleccionado
+            // (útil en caso de errores de validación)
+            document.addEventListener('DOMContentLoaded', toggleFuenteFields);
+        </script>
     </main>
 </div>
 
