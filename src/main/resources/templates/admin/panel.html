@@ -49,7 +49,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Fuentes Registradas</h5>
                             <p class="card-text display-4" th:text="${resumen.totalFuentes}">0</p>
-                            <a href="#" class="btn btn-secondary disabled">Gestionar</a>
+                            <a th:href="@{/admin/gestionar-fuentes}" class="btn btn-primary">Gestionar</a>
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,7 @@ C:/data/desastres.csv" required>
                                 <div class="form-text">Ruta absoluta al archivo en el servidor donde corre el microservicio <b>
                                     agregador</b>.</div>
                             </div>
-                            <input type="hidden" th:field="*{tipo}" value="dataset" />
+                            <input type="hidden" name="tipo" value="dataset" />
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

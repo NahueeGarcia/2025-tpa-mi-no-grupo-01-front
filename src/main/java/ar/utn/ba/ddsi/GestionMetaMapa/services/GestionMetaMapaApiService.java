@@ -238,6 +238,30 @@ public class GestionMetaMapaApiService {
                 .block();
     }
 
+    public void crearFuenteDataset(FuenteDTO dto) {
+        String token = getJwtToken();
+        if (token == null) { throw new RuntimeException("No autenticado"); }
+        this.webClient.post()
+                .uri(metamapaServiceUrl + "/admin/fuentes")
+                .header("Authorization", "Bearer " + token)
+                .bodyValue(dto)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public List<FuenteDTO> obtenerTodasLasFuentes() {
+        String token = getJwtToken();
+        if (token == null) { return List.of(); }
+        return this.webClient.get()
+                .uri(metamapaServiceUrl + "/admin/fuentes")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .bodyToFlux(FuenteDTO.class)
+                .collectList()
+                .block();
+    }
+
     public HechoDTO obtenerHechoPorId(Long id) {
         // Este endpoint es público, no necesita token de autorización
         return this.webClient.get()

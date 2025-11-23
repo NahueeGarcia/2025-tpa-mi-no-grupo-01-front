@@ -67,4 +67,12 @@ public class AdminService {
     public void modificarColeccion(Long coleccionId, ColeccionDTO coleccionDTO) {
         apiService.modificarColeccion(coleccionId, coleccionDTO);
     }
+
+    public void crearFuenteDataset(FuenteDTO fuenteDTO) {
+        apiService.crearFuenteDataset(fuenteDTO);
+    }
+
+    public List<FuenteDTO> obtenerTodasLasFuentes() {
+        return apiService.obtenerTodasLasFuentes();
+    }
 }

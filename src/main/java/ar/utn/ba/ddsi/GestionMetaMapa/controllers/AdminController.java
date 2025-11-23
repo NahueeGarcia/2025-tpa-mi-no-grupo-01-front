@@ -171,4 +171,23 @@ public class AdminController {
         }
         return "redirect:/admin/gestionar-colecciones";
     }
+
+    @PostMapping("/fuentes/crear-dataset")
+    public String crearFuenteDataset(@ModelAttribute("nuevaFuente") FuenteDTO fuenteDTO,
+                                       RedirectAttributes redirectAttributes) {
+        try {
+            adminService.crearFuenteDataset(fuenteDTO);
+            redirectAttributes.addFlashAttribute("mensaje", "Fuente Dataset creada correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al crear la fuente: " + e.getMessage());
+        }
+        return "redirect:/admin/panel";
+    }
+
+    @GetMapping("/gestionar-fuentes")
+    public String gestionarFuentes(Model model) {
+        List<FuenteDTO> fuentes = adminService.obtenerTodasLasFuentes();
+        model.addAttribute("fuentes", fuentes);
+        return "admin/gestionar-fuentes";
+    }
 }
