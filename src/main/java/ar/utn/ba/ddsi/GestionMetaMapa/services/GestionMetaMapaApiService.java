@@ -206,23 +206,44 @@ public class GestionMetaMapaApiService {
 
     public void eliminarColeccion(Long coleccionId) {
         String token = getJwtToken();
-        if (token == null) { /* Manejar error */ return; }
-        this.webClient.delete().uri(metamapaServiceUrl + "/admin/colecciones/" + coleccionId)
+        if (token == null) { throw new RuntimeException("No autenticado"); }
+        this.webClient.delete()
+               .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
     }
 
-
-
-    public HechoDTO obtenerHechoPorId(Long id) {
-    // Este endpoint es público, no necesita token de autorización
-    return this.webClient.get()
-            .uri(metamapaServiceUrl + "/hechos/" + id)
-            .retrieve()
-            .bodyToMono(HechoDTO.class)
-            .block();
+    public ColeccionDTO obtenerColeccionPorId(Long coleccionId) {
+        String token = getJwtToken();
+        if (token == null) { throw new RuntimeException("No autenticado"); }
+        return this.webClient.get()
+                .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .bodyToMono(ColeccionDTO.class)
+                .block();
     }
 
+    public void modificarColeccion(Long coleccionId, ColeccionDTO dto) {
+        String token = getJwtToken();
+        if (token == null) { throw new RuntimeException("No autenticado"); }
+        this.webClient.put()
+                .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)
+                .header("Authorization", "Bearer " + token)
+                .bodyValue(dto)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public HechoDTO obtenerHechoPorId(Long id) {
+        // Este endpoint es público, no necesita token de autorización
+        return this.webClient.get()
+                .uri(metamapaServiceUrl + "/hechos/" + id)
+                .retrieve()
+                .bodyToMono(HechoDTO.class)
+                .block();
+    }
 }

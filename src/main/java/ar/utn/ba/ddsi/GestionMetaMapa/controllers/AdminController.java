@@ -139,4 +139,36 @@ public class AdminController {
         }
         return "redirect:/admin/gestionar-colecciones";
     }
+
+    // --- Métodos para Editar Colección ---
+
+    @GetMapping("/colecciones/{id}/editar")
+    public String mostrarFormularioEditar(@PathVariable("id") Long coleccionId, Model model) {
+        System.out.println("[DEBUG] AdminController: Petición GET a /admin/colecciones/" + coleccionId + "/editar RECIBIDA.");
+        try {
+            ColeccionDTO coleccion = adminService.obtenerColeccionPorId(coleccionId);
+            model.addAttribute("coleccion", coleccion);
+            System.out.println("[DEBUG] AdminController: Mostrando formulario de edición para la colección: " + coleccion.getTitulo());
+            return "colecciones/editar";
+        } catch (Exception e) {
+            System.err.println("[ERROR] AdminController: Error al obtener la colección para editar. Causa: " + e.getMessage());
+            return "redirect:/admin/gestionar-colecciones";
+        }
+    }
+
+    @PostMapping("/colecciones/{id}/editar")
+    public String modificarColeccion(@PathVariable("id") Long coleccionId,
+                                     @ModelAttribute("coleccion") ColeccionDTO coleccionDTO,
+                                     RedirectAttributes redirectAttributes) {
+        System.out.println("[DEBUG] AdminController: Petición POST a /admin/colecciones/" + coleccionId + "/editar RECIBIDA.");
+        try {
+            adminService.modificarColeccion(coleccionId, coleccionDTO);
+            redirectAttributes.addFlashAttribute("mensaje", "Colección modificada exitosamente.");
+            System.out.println("[DEBUG] AdminController: Colección modificada exitosamente.");
+        } catch (Exception e) {
+            System.err.println("[ERROR] AdminController: Error al modificar la colección. Causa: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error al modificar la colección: " + e.getMessage());
+        }
+        return "redirect:/admin/gestionar-colecciones";
+    }
 }

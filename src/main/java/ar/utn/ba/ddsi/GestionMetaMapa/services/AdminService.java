@@ -59,4 +59,12 @@ public class AdminService {
     public void eliminarColeccion(Long coleccionId) {
         apiService.eliminarColeccion(coleccionId);
     }
+
+    public ColeccionDTO obtenerColeccionPorId(Long coleccionId) {
+        return apiService.obtenerColeccionPorId(coleccionId);
+    }
+
+    public void modificarColeccion(Long coleccionId, ColeccionDTO coleccionDTO) {
+        apiService.modificarColeccion(coleccionId, coleccionDTO);
+    }
 }
