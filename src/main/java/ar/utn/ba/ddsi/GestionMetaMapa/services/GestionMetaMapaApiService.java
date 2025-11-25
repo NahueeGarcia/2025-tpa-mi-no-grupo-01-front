@@ -281,4 +281,16 @@ public class GestionMetaMapaApiService {
                 .bodyToMono(HechoDTO.class)
                 .block();
     }
+
+    public void registrarUsuario(SignupDTO registroDTO) {
+        this.webClient.post()
+                .uri(authServiceUrl + "/auth/register")
+                .bodyValue(registroDTO)
+                .retrieve()
+                .onStatus(httpStatus -> httpStatus.is4xxClientError(),
+                        response -> response.bodyToMono(String.class).map(msg -> new RuntimeException("Error en registro: " + msg))
+                )
+                .bodyToMono(Void.class)
+                .block();
+    }
 }
