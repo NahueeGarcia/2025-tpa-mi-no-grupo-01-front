@@ -266,7 +266,7 @@ public class GestionMetaMapaApiService {
         String token = getJwtToken();
         if (token == null) { throw new RuntimeException("No autenticado"); }
         this.webClient.delete()
-                .uri(metamapaServiceUrl + "/api/admin/fuentes/{id}", fuenteId)
+                .uri(metamapaServiceUrl + "/admin/fuentes/{id}", fuenteId)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(Void.class)

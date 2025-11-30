@@ -193,7 +193,7 @@ public class AdminController {
         return "admin/gestionar-fuentes";
     }
 
-    @DeleteMapping("/fuentes/{id}/eliminar")
+    @PostMapping("/fuentes/{id}/eliminar")
     public String eliminarFuente(@PathVariable("id") Long fuenteId, RedirectAttributes redirectAttributes) {
         try {
             adminService.eliminarFuente(fuenteId);
