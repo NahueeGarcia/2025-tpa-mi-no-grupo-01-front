@@ -155,6 +155,22 @@ public class MetaMapaController {
         return "mapa/vista";
     }
 
+    @GetMapping("/hechos/nuevo")
+    public String mostrarFormularioCrearHecho(Model model) {
+        model.addAttribute("hecho", new HechoDTO());
+        return "hechos/crear";
+    }
 
+    @PostMapping("/hechos/crear")
+    public String crearHecho(@ModelAttribute("hecho") HechoDTO hecho, RedirectAttributes redirectAttrs) {
+        try {
+            metamapaService.crearHecho(hecho);
+            redirectAttrs.addFlashAttribute("mensaje", "Hecho aportado correctamente. Gracias por contribuir.");
+        } catch (Exception e) {
+            log.error("Error al crear el hecho", e);
+            redirectAttrs.addFlashAttribute("error", "No se pudo aportar el hecho.");
+        }
+        return "redirect:/metamapa/mapa";
+    }
 }
 

@@ -49,6 +49,21 @@ public class GestionMetaMapaApiService {
                 .retrieve().bodyToMono(AuthResponseDTO.class).block();
     }
 
+    public void crearHecho(HechoDTO dto) {
+        String token = getJwtToken();
+        WebClient.RequestHeadersSpec<?> requestSpec = this.webClient.post()
+                .uri(metamapaServiceUrl + "/hechos")
+                .bodyValue(dto);
+
+        if (token != null) {
+            requestSpec.header("Authorization", "Bearer " + token);
+        }
+
+        requestSpec.retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
     public RolesPermisosDTO getRolesPermisos(String accessToken) {
         return this.webClient.get().uri(authServiceUrl + "/auth/user/roles-permisos")
                 .header("Authorization", "Bearer " + accessToken)
