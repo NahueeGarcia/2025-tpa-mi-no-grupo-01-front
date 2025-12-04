@@ -203,4 +203,48 @@ public class AdminController {
         }
         return "redirect:/admin/gestionar-fuentes";
     }
+
+    // --- Métodos para Moderación de Hechos ---
+
+    @GetMapping("/moderacion-hechos")
+    public String moderarHechos(Model model) {
+        List<HechoDTO> hechosPendientes = adminService.listarHechosPendientes();
+        model.addAttribute("hechosPendientes", hechosPendientes);
+        return "admin/moderacion-hechos"; // Nueva vista
+    }
+
+    @PostMapping("/hechos/{id}/aprobar")
+    public String aprobarHecho(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            adminService.aprobarHecho(id);
+            redirectAttributes.addFlashAttribute("mensaje", "Hecho aprobado correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al aprobar el hecho: " + e.getMessage());
+        }
+        return "redirect:/admin/moderacion-hechos";
+    }
+
+    @PostMapping("/hechos/{id}/rechazar")
+    public String rechazarHecho(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            adminService.rechazarHecho(id);
+            redirectAttributes.addFlashAttribute("mensaje", "Hecho rechazado correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al rechazar el hecho: " + e.getMessage());
+        }
+        return "redirect:/admin/moderacion-hechos";
+    }
+
+    @PostMapping("/hechos/{id}/modificar-y-aceptar")
+    public String modificarYConfirmarHecho(@PathVariable("id") Long id,
+                                           @ModelAttribute("hecho") HechoEdicionDTO hechoModificado,
+                                           RedirectAttributes redirectAttributes) {
+        try {
+            adminService.aceptarHechoConModificaciones(id, hechoModificado);
+            redirectAttributes.addFlashAttribute("mensaje", "Hecho modificado y aceptado correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al modificar y aceptar el hecho: " + e.getMessage());
+        }
+        return "redirect:/admin/moderacion-hechos";
+    }
 }

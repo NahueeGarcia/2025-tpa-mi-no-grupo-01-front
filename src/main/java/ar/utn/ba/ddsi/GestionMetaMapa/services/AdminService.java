@@ -2,6 +2,8 @@ package ar.utn.ba.ddsi.GestionMetaMapa.services;
 
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.ColeccionDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.FuenteDTO;
+import ar.utn.ba.ddsi.GestionMetaMapa.dto.HechoDTO;
+import ar.utn.ba.ddsi.GestionMetaMapa.dto.HechoEdicionDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.ResumenDashboardDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.SolicitudEliminacionDTO;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,23 @@ import java.util.List;
 public class AdminService {
 
     private final GestionMetaMapaApiService apiService;
+
+    // Métodos para moderación de hechos
+    public List<HechoDTO> listarHechosPendientes() {
+        return apiService.listarHechosPendientes();
+    }
+
+    public void aprobarHecho(Long id) {
+        apiService.aprobarHecho(id);
+    }
+
+    public void rechazarHecho(Long id) {
+        apiService.rechazarHecho(id);
+    }
+
+    public void aceptarHechoConModificaciones(Long id, HechoEdicionDTO dto) {
+        apiService.aceptarHechoConModificaciones(id, dto);
+    }
 
     public List<ColeccionDTO> obtenerTodasLasColecciones() {
         return apiService.obtenerTodasLasColeccionesAdmin();

@@ -63,6 +63,42 @@ public class GestionMetaMapaApiService {
                 .block();
     }
 
+    // --- MÉTODOS DE MODERACIÓN (ADMIN) ---
+    public List<HechoDTO> listarHechosPendientes() {
+        String token = getJwtToken();
+        if (token == null) { throw new RuntimeException("No autenticado para ver hechos pendientes."); }
+        return this.webClient.get().uri(metamapaServiceUrl + "/hechos/pendientes")
+                .header("Authorization", "Bearer " + token)
+                .retrieve().bodyToFlux(HechoDTO.class).collectList().block();
+    }
+
+    public void aprobarHecho(Long id) {
+        String token = getJwtToken();
+        if (token == null) { throw new RuntimeException("No autenticado para aprobar hecho."); }
+        this.webClient.post().uri(metamapaServiceUrl + "/hechos/" + id + "/aprobar")
+                .header("Authorization", "Bearer " + token)
+                .retrieve().bodyToMono(Void.class).block();
+    }
+
+    public void rechazarHecho(Long id) {
+        String token = getJwtToken();
+        if (token == null) { throw new RuntimeException("No autenticado para rechazar hecho."); }
+        this.webClient.post().uri(metamapaServiceUrl + "/hechos/" + id + "/rechazar")
+                .header("Authorization", "Bearer " + token)
+                .retrieve().bodyToMono(Void.class).block();
+    }
+
+    public void aceptarHechoConModificaciones(Long id, HechoEdicionDTO dto) {
+        String token = getJwtToken();
+        if (token == null) { throw new RuntimeException("No autenticado para aceptar hecho con modificaciones."); }
+        this.webClient.put().uri(metamapaServiceUrl + "/hechos/" + id + "/modificar-y-aceptar")
+                .header("Authorization", "Bearer " + token)
+                .bodyValue(dto)
+                .retrieve().bodyToMono(Void.class).block();
+    }
+    // --- Fin métodos de moderación ---
+
+
     public void crearHecho(HechoDTO dto) {
         String token = getJwtToken();
         WebClient.RequestHeadersSpec<?> requestSpec = this.webClient.post()

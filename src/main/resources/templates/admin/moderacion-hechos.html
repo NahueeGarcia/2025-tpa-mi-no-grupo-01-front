@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Moderación de Hechos</title>
+</head>
+<body>
+<div th:replace="~{layout/layout :: layout(~{::title}, ~{::main}, 'admin')}">
+    <main>
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Moderación de Hechos</h1>
+                <a th:href="@{/admin/panel}" class="btn btn-secondary">Volver al Panel</a>
+            </div>
+
+            <!-- Mensajes de Feedback -->
+            <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${mensaje}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>Hechos Pendientes de Revisión</h2>
+                </div>
+                <div class="card-body">
+                    <div th:if="${hechosPendientes.isEmpty()}">
+                        <p class="text-muted">No hay hechos pendientes de revisión.</p>
+                    </div>
+                    <div th:unless="${hechosPendientes.isEmpty()}" class="table-responsive">
+                        <table class="table table-striped align-middle">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Descripción</th>
+                                <th>Categoría</th>
+                                <th>Fecha Carga</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="hecho : ${hechosPendientes}">
+                                <td th:text="${hecho.id}"></td>
+                                <td><a th:href="@{/metamapa/hechos/{id}(id=${hecho.id})}" th:text="${hecho.titulo}"></a></td>
+                                <td th:text="${#strings.abbreviate(hecho.descripcion, 50)}"></td>
+                                <td th:text="${hecho.categoria}"></td>
+                                <td th:text="${#temporals.format(hecho.fecCarga, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td>
+                                    <form th:action="@{/admin/hechos/{id}/aprobar(id=${hecho.id})}" method="post" class="d-inline me-1">
+                                        <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('¿Aprobar este hecho?');">Aprobar</button>
+                                    </form>
+                                    <form th:action="@{/admin/hechos/{id}/rechazar(id=${hecho.id})}" method="post" class="d-inline me-1">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Rechazar este hecho?');">Rechazar</button>
+                                    </form>
+                                    <!-- Botón para modificar y aceptar - abre modal o redirige a una página de edición más compleja -->
+                                    <a th:href="@{/admin/hechos/{id}/editar-y-aceptar(id=${hecho.id})}" class="btn btn-sm btn-info">Modificar y Aceptar</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -38,7 +38,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Hechos Totales</h5>
                             <p class="card-text display-4" th:text="${resumen.totalHechos}">0</p>
-                            <a href="#" class="btn btn-secondary disabled">Gestionar</a>
+                            <a th:href="@{/admin/moderacion-hechos}" class="btn btn-primary">Gestionar</a>
                         </div>
                     </div>
                 </div>
