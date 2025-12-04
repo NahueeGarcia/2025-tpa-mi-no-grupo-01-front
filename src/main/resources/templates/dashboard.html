@@ -32,6 +32,12 @@
                 <p><a class="btn btn-secondary" th:href="@{/metamapa/colecciones}" role="button">Ver Colecciones &raquo;</a></p>
             </div>
 
+            <div class="col-md-4" sec:authorize="isAuthenticated()">
+                <h2><i class="bi bi-plus-square"></i> Aportar Hecho</h2>
+                <p>Contribuye con nueva información a la plataforma.</p>
+                <p><a class="btn btn-success" th:href="@{/metamapa/hechos/nuevo}" role="button">Crear Nuevo Hecho &raquo;</a></p>
+            </div>
+
             <div class="col-md-4" sec:authorize="hasRole('ADMIN')">
                 <h2><i class="bi bi-shield-lock"></i> Panel de Admin</h2>
                 <p>Gestiona usuarios, colecciones y configuraciones del sistema.</p>

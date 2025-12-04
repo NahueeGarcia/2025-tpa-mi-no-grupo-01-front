@@ -62,6 +62,10 @@ public class MetaMapaService {
     }
 
 
+    public void editarHecho(Long id, HechoDTO dto) {
+        apiService.editarHecho(id, dto);
+    }
+
     public void crearHecho(HechoDTO dto) {
         apiService.crearHecho(dto);
     }

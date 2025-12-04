@@ -143,6 +143,12 @@ currentPage + 2) )}" th:classappend="${i == currentPage} ? 'active'">
             document.querySelector('#confirmacionModal .modal-header').classList.add('bg-danger', 'text-white');
             confirmacionModal.show();
         }
+
+        // --- Recarga automática de la página cada 30 segundos ---
+        setTimeout(() => {
+            location.reload();
+        }, 30000); // 30 segundos
+
     });
 /*]]>*/
 </script>

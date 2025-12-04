@@ -62,6 +62,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
         session.setAttribute("jwt_token", accessToken);
         session.setAttribute("refresh_token", refreshToken);
         session.setAttribute("username", username);
+        session.setAttribute("currentUserId", authResponse.getUserId()); // Guardamos el ID del usuario
 
         // 2. Con el token obtenido, se hace una segunda llamada para obtener los roles.
         RolesPermisosDTO rolesDto = apiService.getRolesPermisos(accessToken);

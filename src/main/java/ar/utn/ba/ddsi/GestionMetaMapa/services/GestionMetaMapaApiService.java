@@ -49,6 +49,20 @@ public class GestionMetaMapaApiService {
                 .retrieve().bodyToMono(AuthResponseDTO.class).block();
     }
 
+    public void editarHecho(Long id, HechoDTO dto) {
+        String token = getJwtToken();
+        if (token == null) {
+            throw new RuntimeException("No autenticado para realizar esta acción.");
+        }
+        this.webClient.put()
+                .uri(metamapaServiceUrl + "/hechos/" + id)
+                .header("Authorization", "Bearer " + token)
+                .bodyValue(dto)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
     public void crearHecho(HechoDTO dto) {
         String token = getJwtToken();
         WebClient.RequestHeadersSpec<?> requestSpec = this.webClient.post()

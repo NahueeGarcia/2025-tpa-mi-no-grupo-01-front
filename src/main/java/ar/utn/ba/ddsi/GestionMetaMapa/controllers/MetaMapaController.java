@@ -8,6 +8,7 @@ import ar.utn.ba.ddsi.GestionMetaMapa.dto.ColeccionDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.SolicitudDTO;
 import ar.utn.ba.ddsi.GestionMetaMapa.providers.CustomAuthProvider;
 import ar.utn.ba.ddsi.GestionMetaMapa.services.MetaMapaService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -106,12 +108,15 @@ public class MetaMapaController {
 
     @GetMapping("/colecciones/{id}/hechos")
     @PreAuthorize("hasAnyRole('ADMIN', 'VISUALIZADOR', 'CONTRIBUYENTE')")
-    public String listarHechosPorColeccion(@PathVariable("id") Long id, @RequestParam(name = "navegacion", defaultValue = "CURADA") String navegacion, Model model, Authentication authentication) {
+    public String listarHechosPorColeccion(@PathVariable("id") Long id, @RequestParam(name = "navegacion", defaultValue = "CURADA") String navegacion, Model model, HttpSession session) {
         List<HechoDTO> hechos = metamapaService.obtenerHechosPorColeccion(id, navegacion);
         model.addAttribute("hechos", hechos);
         model.addAttribute("titulo", "Listado de hechos por colección");
         model.addAttribute("totalDeHechos", hechos.size());
-        model.addAttribute("usuario", authentication.getName());
+        
+        Long currentUserId = (Long) session.getAttribute("currentUserId");
+        model.addAttribute("currentUserId", currentUserId);
+
         return "hechos-coleccion/lista";
     }
 
@@ -130,11 +135,15 @@ public class MetaMapaController {
 
     @PreAuthorize("permitAll")
     @GetMapping("/hechos/{id}")
-    public String verDetalleHecho(@PathVariable("id") Long id, Model model) {
+    public String verDetalleHecho(@PathVariable("id") Long id, Model model, HttpSession session) {
         System.out.println("[DEBUG] MetaMapaController.verDetalleHecho - Petición RECIBIDA para el Hecho ID: " + id);
         try {
             HechoDTO hecho = metamapaService.obtenerHechoPorId(id);
             model.addAttribute("hecho", hecho);
+
+            Long currentUserId = (Long) session.getAttribute("currentUserId");
+            model.addAttribute("currentUserId", currentUserId);
+
             System.out.println("[DEBUG] MetaMapaController.verDetalleHecho - Devolviendo vista 'hechos/detalle' para el Hecho: " +
                     hecho.getTitulo());
             return "hechos/detalle";
@@ -171,6 +180,34 @@ public class MetaMapaController {
             redirectAttrs.addFlashAttribute("error", "No se pudo aportar el hecho.");
         }
         return "redirect:/metamapa/mapa";
+    }
+
+    @GetMapping("/hechos/{id}/editar")
+    @PreAuthorize("isAuthenticated()")
+    public String mostrarFormularioEditarHecho(@PathVariable("id") Long id, Model model, HttpSession session) {
+        HechoDTO hecho = metamapaService.obtenerHechoPorId(id);
+        Long currentUserId = (Long) session.getAttribute("currentUserId");
+
+        // Doble chequeo de seguridad: en la vista y en el controlador
+        if(hecho.getIdUsuarioCreador() == null || !hecho.getIdUsuarioCreador().equals(currentUserId)) {
+            return "redirect:/403"; // Acceso denegado
+        }
+
+        model.addAttribute("hecho", hecho);
+        return "hechos/editar";
+    }
+
+    @PostMapping("/hechos/{id}/editar")
+    @PreAuthorize("isAuthenticated()")
+    public String editarHecho(@PathVariable("id") Long id, @ModelAttribute("hecho") HechoDTO hecho, RedirectAttributes redirectAttrs) {
+        try {
+            metamapaService.editarHecho(id, hecho);
+            redirectAttrs.addFlashAttribute("mensaje", "Hecho modificado correctamente.");
+        } catch (Exception e) {
+            log.error("Error al editar el hecho", e);
+            redirectAttrs.addFlashAttribute("error", "No se pudo modificar el hecho: " + e.getMessage());
+        }
+        return "redirect:/metamapa/hechos/" + id;
     }
 }
 
