@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Modificar y Aceptar Hecho</title>
+</head>
+<body>
+<div th:replace="~{layout/layout :: layout(~{::title}, ~{::main}, 'admin')}">
+    <main>
+        <div class="container mt-4">
+            <div class="col-lg-8 offset-lg-2">
+                <h1 class="mb-4">Modificar y Aceptar Hecho</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <form th:action="@{/admin/hechos/{id}/modificar-y-aceptar(id=${hecho.id})}" th:object="${hecho}" method="post">
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="titulo" th:field="*{titulo}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="descripcion" th:field="*{descripcion}" rows="4" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label">Categoría</label>
+                                <input type="text" class="form-control" id="categoria" th:field="*{categoria}" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="latitud" class="form-label">Latitud</label>
+                                    <input type="text" class="form-control" id="latitud" th:field="*{latitud}" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="longitud" class="form-label">Longitud</label>
+                                    <input type="text" class="form-control" id="longitud" th:field="*{longitud}" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fecAcontecimiento" class="form-label">Fecha del Acontecimiento</label>
+                                <input type="datetime-local" class="form-control" id="fecAcontecimiento" th:field="*{fecAcontecimiento}" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Guardar Cambios y Aceptar</button>
+                            <a th:href="@{/admin/moderacion-hechos}" class="btn btn-secondary">Cancelar</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -67,7 +67,7 @@ public class GestionMetaMapaApiService {
     public List<HechoDTO> listarHechosPendientes() {
         String token = getJwtToken();
         if (token == null) { throw new RuntimeException("No autenticado para ver hechos pendientes."); }
-        return this.webClient.get().uri(metamapaServiceUrl + "/hechos/pendientes")
+        return this.webClient.get().uri(metamapaServiceUrl + "/admin/hechos/pendientes")
                 .header("Authorization", "Bearer " + token)
                 .retrieve().bodyToFlux(HechoDTO.class).collectList().block();
     }
