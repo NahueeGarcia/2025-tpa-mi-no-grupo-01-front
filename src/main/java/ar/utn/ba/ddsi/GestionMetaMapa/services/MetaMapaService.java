@@ -32,6 +32,10 @@ public class MetaMapaService {
         return apiService.obtenerColecciones();
     }
 
+    public List<HechoDTO> obtenerMisHechos() {
+        return apiService.obtenerMisHechos();
+    }
+
     /**
      * Reincorporado: Obtiene los hechos de una colección específica.
      * Esta operación requiere que el usuario esté autenticado.

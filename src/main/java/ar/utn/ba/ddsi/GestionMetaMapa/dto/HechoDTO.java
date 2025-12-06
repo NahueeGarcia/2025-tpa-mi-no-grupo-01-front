@@ -20,7 +20,7 @@ public class HechoDTO {
     private String longitud;
     private LocalDateTime fecAcontecimiento;
     private LocalDateTime fecCarga;
-    private Long idUsuarioCreador; // Nuevo campo
+    private String creadorUsername; // Cambiado de idUsuarioCreador
 
     public static HechoDTO toDTO(Long id, String titulo, String descripcion, String categoria, String latitud, String longitud) {
         return HechoDTO
@@ -33,7 +33,7 @@ public class HechoDTO {
                 .longitud(longitud)
                 .fecAcontecimiento(LocalDateTime.now())
                 .fecCarga(LocalDateTime.now())
-                .idUsuarioCreador(null) // Por defecto null al crear un DTO manualmente
+                .creadorUsername(null) // Por defecto null al crear un DTO manualmente
                 .build();
     }
 }

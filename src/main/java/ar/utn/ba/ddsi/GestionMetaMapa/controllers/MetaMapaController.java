@@ -105,6 +105,15 @@ public class MetaMapaController {
         return "colecciones/lista";
     }
 
+    @GetMapping("/mis-hechos")
+    @PreAuthorize("isAuthenticated()")
+    public String listarMisHechos(Model model) {
+        List<HechoDTO> misHechos = metamapaService.obtenerMisHechos();
+        model.addAttribute("hechos", misHechos);
+        model.addAttribute("titulo", "Mis Aportes");
+        model.addAttribute("totalHechos", misHechos.size());
+        return "hechos/mis-hechos";
+    }
 
     @GetMapping("/colecciones/{id}/hechos")
     @PreAuthorize("hasAnyRole('ADMIN', 'VISUALIZADOR', 'CONTRIBUYENTE')")
@@ -184,12 +193,12 @@ public class MetaMapaController {
 
     @GetMapping("/hechos/{id}/editar")
     @PreAuthorize("isAuthenticated()")
-    public String mostrarFormularioEditarHecho(@PathVariable("id") Long id, Model model, HttpSession session) {
+    public String mostrarFormularioEditarHecho(@PathVariable("id") Long id, Model model, Authentication authentication) {
         HechoDTO hecho = metamapaService.obtenerHechoPorId(id);
-        Long currentUserId = (Long) session.getAttribute("currentUserId");
+        String currentUsername = authentication.getName();
 
         // Doble chequeo de seguridad: en la vista y en el controlador
-        if(hecho.getIdUsuarioCreador() == null || !hecho.getIdUsuarioCreador().equals(currentUserId)) {
+        if(hecho.getCreadorUsername() == null || !hecho.getCreadorUsername().equals(currentUsername)) {
             return "redirect:/403"; // Acceso denegado
         }
 

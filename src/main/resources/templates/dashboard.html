@@ -38,6 +38,12 @@
                 <p><a class="btn btn-success" th:href="@{/metamapa/hechos/nuevo}" role="button">Crear Nuevo Hecho &raquo;</a></p>
             </div>
 
+            <div class="col-md-4" sec:authorize="isAuthenticated()">
+                <h2><i class="bi bi-person-badge"></i> Mis Aportes</h2>
+                <p>Revisa y gestiona los hechos que has aportado.</p>
+                <p><a class="btn btn-info" th:href="@{/metamapa/mis-hechos}" role="button">Ver Mis Aportes &raquo;</a></p>
+            </div>
+
             <div class="col-md-4" sec:authorize="hasRole('ADMIN')">
                 <h2><i class="bi bi-shield-lock"></i> Panel de Admin</h2>
                 <p>Gestiona usuarios, colecciones y configuraciones del sistema.</p>

@@ -131,6 +131,19 @@ public class GestionMetaMapaApiService {
                 .retrieve().bodyToFlux(ColeccionDTO.class).collectList().block();
     }
 
+    public List<HechoDTO> obtenerMisHechos() {
+        String token = getJwtToken();
+        if (token == null) {
+            throw new RuntimeException("No autenticado para ver 'Mis Hechos'.");
+        }
+        return this.webClient.get().uri(metamapaServiceUrl + "/mis-hechos")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .bodyToFlux(HechoDTO.class)
+                .collectList()
+                .block();
+    }
+
     // --- MÉTODOS PROTEGIDOS  ---
     public List<HechoDTO> obtenerHechosPorColeccion(Long id, String navegacion, String
             accessToken) {

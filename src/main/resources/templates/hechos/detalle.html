@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:text="${hecho.titulo}">Detalle del Hecho</title>
 </head>
@@ -13,7 +13,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h1 th:text="${hecho.titulo}">Título del Hecho</h1>
                     <!-- Botón de Editar Condicional -->
-                    <a th:if="${currentUserId != null and hecho.idUsuarioCreador == currentUserId and #temporals.createNow().minusDays(7).isBefore(hecho.fecCarga)}"
+                    <a th:if="${#authorization.expression('isAuthenticated()') and hecho.creadorUsername != null and hecho.creadorUsername == #authentication.name and #temporals.createNow().minusDays(7).isBefore(hecho.fecCarga)}"
                        th:href="@{/metamapa/hechos/{id}/editar(id=${hecho.id})}"
                        class="btn btn-warning">
                         <i class="bi bi-pencil-fill"></i> Editar
