@@ -41,27 +41,14 @@ public class MetaMapaService {
      * Esta operación requiere que el usuario esté autenticado.
      */
     public List<HechoDTO> obtenerHechosPorColeccion(Long id, String navegacion) {
-        String token = getJwtToken();
-        if (token == null) {
-            // Si no hay usuario logueado, no se puede realizar esta consulta protegida.
-            return List.of();
-        }
-        return apiService.obtenerHechosPorColeccion(id, navegacion, token);
+        // El filtro automático en apiService se encargará del token
+        return apiService.obtenerHechosPorColeccion(id, navegacion);
     }
 
     public void crearSolicitudEliminacion(SolicitudEliminacionDTO solicitud){
-
-        String token = null;
-
-
-        //String token = getJwtToken();
-        //if (token != null) {
-        //    apiService.crearSolicitud(solicitud, token);
-        //}
+        // El filtro automático en apiService se encargará del token si el usuario está logueado
         System.out.println("[DEBUG] Enviando solicitud de eliminación al backend para Hecho ID: " + solicitud.getHechoId());
-
-        apiService.crearSolicitud(solicitud, token);
-
+        apiService.crearSolicitud(solicitud);
         System.out.println("[DEBUG] Solicitud enviada al backend sin errores en el frontend.");
     }
 

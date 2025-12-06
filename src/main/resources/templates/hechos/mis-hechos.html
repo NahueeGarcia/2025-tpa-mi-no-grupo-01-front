@@ -37,8 +37,9 @@
                     <tr>
                         <th>ID</th>
                         <th>Título</th>
-                        <th>Categoría</th>
-                        <th>Fecha del Acontecimiento</th>
+                        <th>[DEBUG] Creador</th>
+                        <th>[DEBUG] Yo</th>
+                        <th>[DEBUG] Fecha Carga</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
@@ -46,8 +47,9 @@
                     <tr th:each="hecho : ${hechos}">
                         <td th:text="${hecho.id}"></td>
                         <td><a th:href="@{/metamapa/hechos/{id}(id=${hecho.id})}" th:text="${hecho.titulo}"></a></td>
-                        <td><span class="badge bg-secondary fw-normal" th:text="${hecho.categoria}"></span></td>
-                        <td th:text="${#temporals.format(hecho.fecAcontecimiento, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td th:text="${hecho.creadorUsername}"></td>
+                        <td th:text="${#authentication.name}"></td>
+                        <td th:text="${hecho.fecCarga}"></td>
                         <td>
                             <!-- Botón de Editar Condicional -->
                             <a th:if="${#authorization.expression('isAuthenticated()') and hecho.creadorUsername != null and hecho.creadorUsername == #authentication.name and #temporals.createNow().minusDays(7).isBefore(hecho.fecCarga)}"

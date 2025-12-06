@@ -1,12 +1,14 @@
 package ar.utn.ba.ddsi.GestionMetaMapa.services;
 
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.*;
-import jakarta.servlet.http.HttpServletRequest; // Importar HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.reactive.function.client.ClientRequest;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -19,22 +21,34 @@ public class GestionMetaMapaApiService {
     private final String authServiceUrl;
     private final String metamapaServiceUrl;
 
-
     public GestionMetaMapaApiService(
             @Value("${auth.service.url}") String authServiceUrl,
             @Value("${metamapa.service.url}") String metamapaServiceUrl) {
-        this.webClient = WebClient.builder().build();
+        this.webClient = WebClient.builder()
+                .filter(addAuthorizationHeader())
+                .build();
         this.authServiceUrl = authServiceUrl;
         this.metamapaServiceUrl = metamapaServiceUrl;
     }
 
-    // Método auxiliar para obtener el token JWT de la sesión
+    private ExchangeFilterFunction addAuthorizationHeader() {
+        return (clientRequest, next) -> {
+            String token = getJwtToken();
+            if (token != null && !token.isBlank()) {
+                ClientRequest authorizedRequest = ClientRequest.from(clientRequest)
+                        .header("Authorization", "Bearer " + token)
+                        .build();
+                return next.exchange(authorizedRequest);
+            }
+            return next.exchange(clientRequest);
+        };
+    }
+
     private String getJwtToken() {
-        ServletRequestAttributes attributes = (ServletRequestAttributes)
-                RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null) {
             HttpServletRequest request = attributes.getRequest();
-            HttpSession session = request.getSession(false); // No crear si no existe
+            HttpSession session = request.getSession(false);
             if (session != null) {
                 return (String) session.getAttribute("jwt_token");
             }
@@ -49,78 +63,14 @@ public class GestionMetaMapaApiService {
                 .retrieve().bodyToMono(AuthResponseDTO.class).block();
     }
 
-    public void editarHecho(Long id, HechoDTO dto) {
-        String token = getJwtToken();
-        if (token == null) {
-            throw new RuntimeException("No autenticado para realizar esta acción.");
-        }
-        this.webClient.put()
-                .uri(metamapaServiceUrl + "/hechos/" + id)
-                .header("Authorization", "Bearer " + token)
-                .bodyValue(dto)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
-    // --- MÉTODOS DE MODERACIÓN (ADMIN) ---
-    public List<HechoDTO> listarHechosPendientes() {
-        String token = getJwtToken();
-        if (token == null) { throw new RuntimeException("No autenticado para ver hechos pendientes."); }
-        return this.webClient.get().uri(metamapaServiceUrl + "/admin/hechos/pendientes")
-                .header("Authorization", "Bearer " + token)
-                .retrieve().bodyToFlux(HechoDTO.class).collectList().block();
-    }
-
-    public void aprobarHecho(Long id) {
-        String token = getJwtToken();
-        if (token == null) { throw new RuntimeException("No autenticado para aprobar hecho."); }
-        this.webClient.post().uri(metamapaServiceUrl + "/hechos/" + id + "/aprobar")
-                .header("Authorization", "Bearer " + token)
-                .retrieve().bodyToMono(Void.class).block();
-    }
-
-    public void rechazarHecho(Long id) {
-        String token = getJwtToken();
-        if (token == null) { throw new RuntimeException("No autenticado para rechazar hecho."); }
-        this.webClient.post().uri(metamapaServiceUrl + "/hechos/" + id + "/rechazar")
-                .header("Authorization", "Bearer " + token)
-                .retrieve().bodyToMono(Void.class).block();
-    }
-
-    public void aceptarHechoConModificaciones(Long id, HechoEdicionDTO dto) {
-        String token = getJwtToken();
-        if (token == null) { throw new RuntimeException("No autenticado para aceptar hecho con modificaciones."); }
-        this.webClient.put().uri(metamapaServiceUrl + "/hechos/" + id + "/modificar-y-aceptar")
-                .header("Authorization", "Bearer " + token)
-                .bodyValue(dto)
-                .retrieve().bodyToMono(Void.class).block();
-    }
-    // --- Fin métodos de moderación ---
-
-
-    public void crearHecho(HechoDTO dto) {
-        String token = getJwtToken();
-        WebClient.RequestHeadersSpec<?> requestSpec = this.webClient.post()
-                .uri(metamapaServiceUrl + "/hechos")
-                .bodyValue(dto);
-
-        if (token != null) {
-            requestSpec.header("Authorization", "Bearer " + token);
-        }
-
-        requestSpec.retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
     public RolesPermisosDTO getRolesPermisos(String accessToken) {
+        // Este método es especial porque recibe el token directamente, no lo saca de la sesión
         return this.webClient.get().uri(authServiceUrl + "/auth/user/roles-permisos")
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve().bodyToMono(RolesPermisosDTO.class).block();
     }
 
-    // --- MÉTODOS PÚBLICOS ---
+    // --- MÉTODOS PÚBLICOS (NO REQUIEREN TOKEN) ---
     public List<HechoDTO> obtenerHechos() {
         return this.webClient.get().uri(metamapaServiceUrl + "/hechos")
                 .retrieve().bodyToFlux(HechoDTO.class).collectList().block();
@@ -130,229 +80,8 @@ public class GestionMetaMapaApiService {
         return this.webClient.get().uri(metamapaServiceUrl + "/colecciones")
                 .retrieve().bodyToFlux(ColeccionDTO.class).collectList().block();
     }
-
-    public List<HechoDTO> obtenerMisHechos() {
-        String token = getJwtToken();
-        if (token == null) {
-            throw new RuntimeException("No autenticado para ver 'Mis Hechos'.");
-        }
-        return this.webClient.get().uri(metamapaServiceUrl + "/mis-hechos")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToFlux(HechoDTO.class)
-                .collectList()
-                .block();
-    }
-
-    // --- MÉTODOS PROTEGIDOS  ---
-    public List<HechoDTO> obtenerHechosPorColeccion(Long id, String navegacion, String
-            accessToken) {
-        String url = metamapaServiceUrl + "/colecciones/" + id + "/hechos?navegacion=" +
-                navegacion;
-        return this.webClient.get().uri(url)
-                .header("Authorization", "Bearer " + accessToken)
-                .retrieve()
-                .bodyToFlux(HechoDTO.class)
-                .collectList()
-                .block();
-    }
-
-    public void crearSolicitud(SolicitudEliminacionDTO solicitudDTO, String accessToken) {
-        // 1. Construir la petición POST base
-        WebClient.RequestHeadersSpec<?> requestSpec = this.webClient.post()
-                .uri(metamapaServiceUrl + "/solicitudes-eliminacion")
-                .bodyValue(solicitudDTO);
-
-        // 2. Añadir la cabecera de autorización SÓLO si el token no es nulo
-        if (accessToken != null && !accessToken.isBlank()) {
-            requestSpec.header("Authorization", "Bearer " + accessToken);
-        }
-
-        // 3. Ejecutar la petición
-        requestSpec.retrieve()
-                   .bodyToMono(Void.class)
-                   .block();
-    }
-
-    // --- MÉTODOS DE ADMINISTRACIÓN ---
-
-    public List<ColeccionDTO> obtenerTodasLasColeccionesAdmin() {
-        String token = getJwtToken();
-        if (token == null) {
-            // Manejar el caso donde no hay token, quizás lanzar una excepción o devolver lista vacía
-            return List.of();
-        }
-        return this.webClient.get().uri(metamapaServiceUrl + "/admin/colecciones")
-                .header("Authorization", "Bearer " + token)
-                .retrieve().bodyToFlux(ColeccionDTO.class).collectList().block();
-    }
-
-    public void agregarFuenteAColeccion(Long coleccionId, FuenteDTO fuenteDTO) {
-        String token = getJwtToken();
-        if (token == null) { /* Manejar error */ return; }
-        this.webClient.post().uri(metamapaServiceUrl + "/admin/colecciones/" + coleccionId +
-                        "/fuentes")
-                .header("Authorization", "Bearer " + token)
-                .bodyValue(fuenteDTO)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
-    public void quitarFuenteDeColeccion(Long coleccionId, Long fuenteId) {
-        String token = getJwtToken();
-        if (token == null) { /* Manejar error */ return; }
-        this.webClient.delete().uri(metamapaServiceUrl + "/admin/colecciones/" + coleccionId +
-                        "/fuentes/" + fuenteId)
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
-    public void modificarAlgoritmoDeConsenso(Long coleccionId, String tipoAlgoritmo) {
-        String token = getJwtToken();
-        if (token == null) { /* Manejar error */ return; }
-        ModificarAlgoritmoDTO dto = new ModificarAlgoritmoDTO(tipoAlgoritmo);
-        this.webClient.put().uri(metamapaServiceUrl + "/admin/colecciones/" + coleccionId +
-                        "/algoritmo")
-                .header("Authorization", "Bearer " + token)
-                .bodyValue(dto)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
-    public List<SolicitudEliminacionDTO> obtenerSolicitudesDeEliminacionAdmin() {
-        String token = getJwtToken();
-        if (token == null) { /* Manejar error */ return List.of(); }
-        return this.webClient.get().uri(metamapaServiceUrl + "/admin/solicitudes-eliminacion")
-                .header("Authorization", "Bearer " + token)
-                .retrieve().bodyToFlux(SolicitudEliminacionDTO.class).collectList().block();
-    }
-
-    public void procesarFuenteDeColeccion(Long coleccionId, Long fuenteId) {
-        String token = getJwtToken();
-        if (token == null) { /* Manejar error */ return; }
-        this.webClient.post().uri(metamapaServiceUrl + "/admin/colecciones/" + coleccionId +
-                        "/fuentes/" + fuenteId + "/procesar")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
-
-    public void aprobarSolicitud(Long solicitudId) {
-        String token = getJwtToken();
-        if (token == null) { /* Manejar error */ return; }
-        this.webClient.post().uri(metamapaServiceUrl + "/admin/solicitudes/" + solicitudId + "/aprobar")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
-    public void rechazarSolicitud(Long solicitudId) {
-         String token = getJwtToken();
-        if (token == null) { /* Manejar error */ return; }
-        this.webClient.post().uri(metamapaServiceUrl + "/admin/solicitudes/" + solicitudId + "/rechazar")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
-    public ResumenDashboardDTO obtenerResumenDashboard() {
-        String token = getJwtToken();
-         if (token == null) { return new ResumenDashboardDTO(); }
-        return this.webClient.get().uri(metamapaServiceUrl + "/admin/resumen-dashboard")
-                .header("Authorization", "Bearer " + token)
-                .retrieve().bodyToMono(ResumenDashboardDTO.class).block();
-    }
-
-    public ColeccionDTO crearColeccion(ColeccionDTO dto) {
-        String token = getJwtToken();
-        if (token == null) { throw new RuntimeException("No autenticado"); }
-        return this.webClient.post().uri(metamapaServiceUrl + "/admin/colecciones")
-                .header("Authorization", "Bearer " + token)
-                .bodyValue(dto)
-                .retrieve()
-                .bodyToMono(ColeccionDTO.class)
-                .block();
-    }
-
-    public void eliminarColeccion(Long coleccionId) {
-        String token = getJwtToken();
-        if (token == null) { throw new RuntimeException("No autenticado"); }
-        this.webClient.delete()
-               .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
-    public ColeccionDTO obtenerColeccionPorId(Long coleccionId) {
-        String token = getJwtToken();
-        if (token == null) { throw new RuntimeException("No autenticado"); }
-        return this.webClient.get()
-                .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToMono(ColeccionDTO.class)
-                .block();
-    }
-
-    public void modificarColeccion(Long coleccionId, ColeccionDTO dto) {
-        String token = getJwtToken();
-        if (token == null) { throw new RuntimeException("No autenticado"); }
-        this.webClient.put()
-                .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)
-                .header("Authorization", "Bearer " + token)
-                .bodyValue(dto)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
-    public void crearFuenteDataset(FuenteDTO dto) {
-        String token = getJwtToken();
-        if (token == null) { throw new RuntimeException("No autenticado"); }
-        this.webClient.post()
-                .uri(metamapaServiceUrl + "/admin/fuentes")
-                .header("Authorization", "Bearer " + token)
-                .bodyValue(dto)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
-    public List<FuenteDTO> obtenerTodasLasFuentes() {
-        String token = getJwtToken();
-        if (token == null) { return List.of(); }
-        return this.webClient.get()
-                .uri(metamapaServiceUrl + "/admin/fuentes")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToFlux(FuenteDTO.class)
-                .collectList()
-                .block();
-    }
-
-    public void eliminarFuente(Long fuenteId) {
-        String token = getJwtToken();
-        if (token == null) { throw new RuntimeException("No autenticado"); }
-        this.webClient.delete()
-                .uri(metamapaServiceUrl + "/admin/fuentes/{id}", fuenteId)
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-    }
-
+    
     public HechoDTO obtenerHechoPorId(Long id) {
-        // Este endpoint es público, no necesita token de autorización
         return this.webClient.get()
                 .uri(metamapaServiceUrl + "/hechos/" + id)
                 .retrieve()
@@ -368,6 +97,196 @@ public class GestionMetaMapaApiService {
                 .onStatus(httpStatus -> httpStatus.is4xxClientError(),
                         response -> response.bodyToMono(String.class).map(msg -> new RuntimeException("Error en registro: " + msg))
                 )
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    // --- MÉTODOS QUE PUEDEN SER ANÓNIMOS O AUTENTICADOS ---
+    
+    public void crearHecho(HechoDTO dto) {
+        this.webClient.post()
+                .uri(metamapaServiceUrl + "/hechos")
+                .bodyValue(dto)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void crearSolicitud(SolicitudEliminacionDTO solicitudDTO) {
+        this.webClient.post()
+                .uri(metamapaServiceUrl + "/solicitudes-eliminacion")
+                .bodyValue(solicitudDTO)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    // --- MÉTODOS ESTRICTAMENTE AUTENTICADOS ---
+
+    public void editarHecho(Long id, HechoDTO dto) {
+        this.webClient.put()
+                .uri(metamapaServiceUrl + "/hechos/" + id)
+                .bodyValue(dto)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public List<HechoDTO> obtenerMisHechos() {
+        return this.webClient.get().uri(metamapaServiceUrl + "/mis-hechos")
+                .retrieve()
+                .bodyToFlux(HechoDTO.class)
+                .collectList()
+                .block();
+    }
+
+    public List<HechoDTO> obtenerHechosPorColeccion(Long id, String navegacion) {
+        String url = metamapaServiceUrl + "/colecciones/" + id + "/hechos?navegacion=" + navegacion;
+        return this.webClient.get().uri(url)
+                .retrieve()
+                .bodyToFlux(HechoDTO.class)
+                .collectList()
+                .block();
+    }
+
+    // --- MÉTODOS DE ADMINISTRACIÓN (REQUIEREN TOKEN) ---
+
+    public List<HechoDTO> listarHechosPendientes() {
+        return this.webClient.get().uri(metamapaServiceUrl + "/admin/hechos/pendientes")
+                .retrieve().bodyToFlux(HechoDTO.class).collectList().block();
+    }
+
+    public void aprobarHecho(Long id) {
+        this.webClient.post().uri(metamapaServiceUrl + "/admin/hechos/{id}/aprobar", id)
+                .retrieve().bodyToMono(Void.class).block();
+    }
+
+    public void rechazarHecho(Long id) {
+        this.webClient.post().uri(metamapaServiceUrl + "/admin/hechos/{id}/rechazar", id)
+                .retrieve().bodyToMono(Void.class).block();
+    }
+    
+    public void aceptarHechoConModificaciones(Long id, HechoEdicionDTO dto) {
+        this.webClient.put().uri(metamapaServiceUrl + "/admin/hechos/{id}/modificar-y-aceptar", id)
+                .bodyValue(dto)
+                .retrieve().bodyToMono(Void.class).block();
+    }
+    
+    public List<ColeccionDTO> obtenerTodasLasColeccionesAdmin() {
+        return this.webClient.get().uri(metamapaServiceUrl + "/admin/colecciones")
+                .retrieve().bodyToFlux(ColeccionDTO.class).collectList().block();
+    }
+
+    public void agregarFuenteAColeccion(Long coleccionId, FuenteDTO fuenteDTO) {
+        this.webClient.post().uri(metamapaServiceUrl + "/admin/colecciones/" + coleccionId + "/fuentes")
+                .bodyValue(fuenteDTO)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void quitarFuenteDeColeccion(Long coleccionId, Long fuenteId) {
+        this.webClient.delete().uri(metamapaServiceUrl + "/admin/colecciones/" + coleccionId + "/fuentes/" + fuenteId)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void modificarAlgoritmoDeConsenso(Long coleccionId, String tipoAlgoritmo) {
+        ModificarAlgoritmoDTO dto = new ModificarAlgoritmoDTO(tipoAlgoritmo);
+        this.webClient.put().uri(metamapaServiceUrl + "/admin/colecciones/" + coleccionId + "/algoritmo")
+                .bodyValue(dto)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public List<SolicitudEliminacionDTO> obtenerSolicitudesDeEliminacionAdmin() {
+        return this.webClient.get().uri(metamapaServiceUrl + "/admin/solicitudes-eliminacion")
+                .retrieve().bodyToFlux(SolicitudEliminacionDTO.class).collectList().block();
+    }
+
+    public void procesarFuenteDeColeccion(Long coleccionId, Long fuenteId) {
+        this.webClient.post().uri(metamapaServiceUrl + "/admin/colecciones/" + coleccionId + "/fuentes/" + fuenteId + "/procesar")
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void aprobarSolicitud(Long solicitudId) {
+        this.webClient.post().uri(metamapaServiceUrl + "/admin/solicitudes/" + solicitudId + "/aprobar")
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void rechazarSolicitud(Long solicitudId) {
+        this.webClient.post().uri(metamapaServiceUrl + "/admin/solicitudes/" + solicitudId + "/rechazar")
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public ResumenDashboardDTO obtenerResumenDashboard() {
+        return this.webClient.get().uri(metamapaServiceUrl + "/admin/resumen-dashboard")
+                .retrieve().bodyToMono(ResumenDashboardDTO.class).block();
+    }
+
+    public ColeccionDTO crearColeccion(ColeccionDTO dto) {
+        return this.webClient.post().uri(metamapaServiceUrl + "/admin/colecciones")
+                .bodyValue(dto)
+                .retrieve()
+                .bodyToMono(ColeccionDTO.class)
+                .block();
+    }
+
+    public void eliminarColeccion(Long coleccionId) {
+        this.webClient.delete()
+               .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public ColeccionDTO obtenerColeccionPorId(Long coleccionId) {
+        return this.webClient.get()
+                .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)
+                .retrieve()
+                .bodyToMono(ColeccionDTO.class)
+                .block();
+    }
+
+    public void modificarColeccion(Long coleccionId, ColeccionDTO dto) {
+        this.webClient.put()
+                .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)
+                .bodyValue(dto)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public void crearFuenteDataset(FuenteDTO dto) {
+        this.webClient.post()
+                .uri(metamapaServiceUrl + "/admin/fuentes")
+                .bodyValue(dto)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
+    public List<FuenteDTO> obtenerTodasLasFuentes() {
+        return this.webClient.get()
+                .uri(metamapaServiceUrl + "/admin/fuentes")
+                .retrieve()
+                .bodyToFlux(FuenteDTO.class)
+                .collectList()
+                .block();
+    }
+
+    public void eliminarFuente(Long fuenteId) {
+        this.webClient.delete()
+                .uri(metamapaServiceUrl + "/admin/fuentes/{id}", fuenteId)
+                .retrieve()
                 .bodyToMono(Void.class)
                 .block();
     }
