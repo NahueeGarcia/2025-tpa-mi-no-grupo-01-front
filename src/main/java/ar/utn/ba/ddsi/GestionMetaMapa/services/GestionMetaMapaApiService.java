@@ -89,6 +89,14 @@ public class GestionMetaMapaApiService {
                 .block();
     }
 
+    public HechoDTO obtenerHechoPorIdOrigen(Long idOrigen) {
+        return this.webClient.get()
+                .uri(metamapaServiceUrl + "/hechos/por-id-origen/" + idOrigen)
+                .retrieve()
+                .bodyToMono(HechoDTO.class)
+                .block();
+    }
+
     public void registrarUsuario(SignupDTO registroDTO) {
         this.webClient.post()
                 .uri(authServiceUrl + "/auth/register")

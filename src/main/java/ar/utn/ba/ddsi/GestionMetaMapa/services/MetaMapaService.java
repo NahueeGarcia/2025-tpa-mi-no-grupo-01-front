@@ -64,4 +64,8 @@ public class MetaMapaService {
     public HechoDTO obtenerHechoPorId(Long id) {
         return apiService.obtenerHechoPorId(id);
     }
+
+    public HechoDTO obtenerHechoPorIdOrigen(Long idOrigen) {
+        return apiService.obtenerHechoPorIdOrigen(idOrigen);
+    }
 }

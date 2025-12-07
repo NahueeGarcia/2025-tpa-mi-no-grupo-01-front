@@ -194,11 +194,11 @@ public class MetaMapaController {
     @GetMapping("/hechos/{id}/editar")
     @PreAuthorize("isAuthenticated()")
     public String mostrarFormularioEditarHecho(@PathVariable("id") Long id, Model model, Authentication authentication) {
-        HechoDTO hecho = metamapaService.obtenerHechoPorId(id);
+        HechoDTO hecho = metamapaService.obtenerHechoPorIdOrigen(id); // <-- CAMBIADO
         String currentUsername = authentication.getName();
 
         // Doble chequeo de seguridad: en la vista y en el controlador
-        if(hecho.getCreadorUsername() == null || !hecho.getCreadorUsername().equals(currentUsername)) {
+        if(hecho == null || hecho.getCreadorUsername() == null || !hecho.getCreadorUsername().equals(currentUsername)) {
             return "redirect:/403"; // Acceso denegado
         }
 
@@ -216,7 +216,8 @@ public class MetaMapaController {
             log.error("Error al editar el hecho", e);
             redirectAttrs.addFlashAttribute("error", "No se pudo modificar el hecho: " + e.getMessage());
         }
-        return "redirect:/metamapa/hechos/" + id;
+        // Redirigir al ID del agregador, no al idOrigen
+        return "redirect:/metamapa/hechos/" + hecho.getId();
     }
 }
 

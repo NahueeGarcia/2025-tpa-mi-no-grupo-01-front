@@ -14,7 +14,7 @@
                     <h1 th:text="${hecho.titulo}">Título del Hecho</h1>
                     <!-- Botón de Editar Condicional -->
                     <a th:if="${#authorization.expression('isAuthenticated()') and hecho.creadorUsername != null and hecho.creadorUsername == #authentication.name and #temporals.createNow().minusDays(7).isBefore(hecho.fecCarga)}"
-                       th:href="@{/metamapa/hechos/{id}/editar(id=${hecho.id})}"
+                       th:href="@{/metamapa/hechos/{id}/editar(id=${hecho.idOrigen})}"
                        class="btn btn-warning">
                         <i class="bi bi-pencil-fill"></i> Editar
                     </a>

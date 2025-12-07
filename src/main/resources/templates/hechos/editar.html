@@ -11,7 +11,8 @@
                 <h1 class="mb-4">Editar Hecho</h1>
                 <div class="card">
                     <div class="card-body">
-                        <form th:action="@{/metamapa/hechos/{id}/editar(id=${hecho.id})}" th:object="${hecho}" method="post">
+                        <form th:action="@{/metamapa/hechos/{id}/editar(id=${hecho.idOrigen})}" th:object="${hecho}" method="post">
+                            <input type="hidden" th:field="*{idOrigen}" />
                             <div class="mb-3">
                                 <label for="titulo" class="form-label">Título</label>
                                 <input type="text" class="form-control" id="titulo" th:field="*{titulo}" required>

@@ -20,7 +20,8 @@ public class HechoDTO {
     private String longitud;
     private LocalDateTime fecAcontecimiento;
     private LocalDateTime fecCarga;
-    private String creadorUsername; // Cambiado de idUsuarioCreador
+    private String creadorUsername;
+    private Long idOrigen;
 
     public static HechoDTO toDTO(Long id, String titulo, String descripcion, String categoria, String latitud, String longitud) {
         return HechoDTO
