@@ -39,6 +39,7 @@
                         <th>Título</th>
                         <th>Categoría</th>
                         <th>Fecha del Acontecimiento</th>
+                        <th>Tiempo Restante</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
@@ -49,8 +50,15 @@
                         <td><span class="badge bg-secondary fw-normal" th:text="${hecho.categoria}"></span></td>
                         <td th:text="${#temporals.format(hecho.fecAcontecimiento, 'dd/MM/yyyy HH:mm')}"></td>
                         <td>
+                            <span th:if="${hecho.fecCarga != null and #authorization.expression('isAuthenticated()') and hecho.creadorUsername != null and hecho.creadorUsername == #authentication.name and #temporals.createNow().minusDays(7).isBefore(hecho.fecCarga)}"
+                                  th:with="diasRestantes=${T(java.time.temporal.ChronoUnit).DAYS.between(#temporals.createNow(), hecho.fecCarga.plusDays(7))}"
+                                  class="badge bg-info" th:text="${diasRestantes > 0 ? diasRestantes + ' días' : 'Último día'}"></span>
+                            <span th:unless="${hecho.fecCarga != null and #authorization.expression('isAuthenticated()') and hecho.creadorUsername != null and hecho.creadorUsername == #authentication.name and #temporals.createNow().minusDays(7).isBefore(hecho.fecCarga)}"
+                                  class="badge bg-secondary">Expirado/N/A</span>
+                        </td>
+                        <td>
                             <!-- Botón de Editar Condicional -->
-                            <a th:if="${#authorization.expression('isAuthenticated()') and hecho.creadorUsername != null and hecho.creadorUsername == #authentication.name and #temporals.createNow().minusDays(7).isBefore(hecho.fecCarga)}"
+                            <a th:if="${hecho.fecCarga != null and #authorization.expression('isAuthenticated()') and hecho.creadorUsername != null and hecho.creadorUsername == #authentication.name and #temporals.createNow().minusDays(7).isBefore(hecho.fecCarga)}"
                                th:href="@{/metamapa/hechos/{id}/editar(id=${hecho.idOrigen})}"
                                class="btn btn-warning btn-sm">
                                 <i class="bi bi-pencil-fill"></i> Editar
