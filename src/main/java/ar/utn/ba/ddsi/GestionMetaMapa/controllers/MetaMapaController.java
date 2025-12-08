@@ -216,8 +216,8 @@ public class MetaMapaController {
             log.error("Error al editar el hecho", e);
             redirectAttrs.addFlashAttribute("error", "No se pudo modificar el hecho: " + e.getMessage());
         }
-        // Redirigir al ID del agregador, no al idOrigen
-        return "redirect:/metamapa/hechos/" + hecho.getId();
+        // Redirigir a la lista de "Mis Aportes" para evitar problemas de IDs
+        return "redirect:/metamapa/mis-hechos";
     }
 }
 
