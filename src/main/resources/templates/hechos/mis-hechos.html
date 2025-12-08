@@ -60,9 +60,20 @@
                             <!-- Botón de Editar Condicional -->
                             <a th:if="${hecho.fecCarga != null and #authorization.expression('isAuthenticated()') and hecho.creadorUsername != null and hecho.creadorUsername == #authentication.name and #temporals.createNow().minusDays(7).isBefore(hecho.fecCarga)}"
                                th:href="@{/metamapa/hechos/{id}/editar(id=${hecho.idOrigen})}"
-                               class="btn btn-warning btn-sm">
-                                <i class="bi bi-pencil-fill"></i> Editar
+                               class="btn btn-warning btn-sm" title="Editar">
+                                <i class="bi bi-pencil-fill"></i>
                             </a>
+                            <!-- Botón de Solicitar Eliminación -->
+                            <form th:action="@{/metamapa/solicitudes-eliminacion}" method="post" style="display:inline-block;"
+                                  th:if="${#authorization.expression('isAuthenticated()') and hecho.creadorUsername != null and hecho.creadorUsername == #authentication.name and !hecho.eliminado}">
+                                <input type="hidden" name="hechoId" th:value="${hecho.id}" />
+                                <!-- Para una eliminación simple, no se necesita motivo. Si se requiriera, se añadiría un textarea aquí. -->
+                                <input type="hidden" name="motivo" value="Solicitud de eliminación por el creador." />
+                                <button type="submit" class="btn btn-danger btn-sm" title="Solicitar Eliminación"
+                                        onclick="return confirm('¿Está seguro de que desea solicitar la eliminación de este hecho?');">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     </tbody>

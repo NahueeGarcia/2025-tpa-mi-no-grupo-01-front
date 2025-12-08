@@ -22,6 +22,7 @@ public class HechoDTO {
     private LocalDateTime fecCarga;
     private String creadorUsername;
     private Long idOrigen;
+    private Boolean eliminado;
 
     public static HechoDTO toDTO(Long id, String titulo, String descripcion, String categoria, String latitud, String longitud) {
         return HechoDTO

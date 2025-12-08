@@ -45,39 +45,81 @@
                 <div class="card-header">
                     <h3>Solicitar Eliminación de este Hecho</h3>
                 </div>
+
+
+
+
+
+
+
+
                 <div class="card-body">
                     <form th:action="@{/metamapa/solicitudes-eliminacion}" method="post">
-                        <!-- Campo oculto para enviar el ID del hecho -->
                         <input type="hidden" name="hechoId" th:value="${hecho.id}" />
-
                         <div class="mb-3">
                             <label for="motivo" class="form-label">Motivo de la solicitud</label>
                             <textarea class="form-control" id="motivo" name="motivo" rows="5"></textarea>
                             <small id="char-counter" class="form-text text-muted">0 caracteres</small>
                         </div>
-
                         <button type="submit" class="btn btn-danger">Enviar Solicitud de Eliminación</button>
                     </form>
 
-                    <script>
-                        const motivoTextarea = document.getElementById('motivo');
-                        const charCounter = document.getElementById('char-counter');
-                        const minChars = 500;
+                    <script th:inline="javascript">
+                        /*<![CDATA[*/
+                            const isAuthenticated = /*[[${#authorization.expression('isAuthenticated()')}]]*/ false;
+                            const motivoTextarea = document.getElementById('motivo');
+                            const charCounter = document.getElementById('char-counter');
+                            const minChars = 500;
 
-                        motivoTextarea.addEventListener('input', () => {
-                            const currentCharCount = motivoTextarea.value.length;
-                            charCounter.textContent = currentCharCount + ' caracteres';
+                            motivoTextarea.addEventListener('input', () => {
+                                const currentCharCount = motivoTextarea.value.length;
 
-                            if (currentCharCount < minChars) {
-                                charCounter.classList.remove('text-success');
-                                charCounter.classList.add('text-danger');
-                            } else {
-                                charCounter.classList.remove('text-danger');
-                                charCounter.classList.add('text-success');
+                                if (isAuthenticated) {
+                                    // Para usuarios logueados, solo mostrar contador simple
+                                    charCounter.textContent = currentCharCount + ' caracteres';
+                                    motivoTextarea.setCustomValidity(''); // Asegurarse de que no haya validación
+                                } else {
+                                    // Para usuarios anónimos (visualizadores), aplicar la validación estricta
+                                    charCounter.textContent = currentCharCount + ' / ' + minChars + ' caracteres';
+                                    if (currentCharCount < minChars) {
+                                        motivoTextarea.setCustomValidity('El motivo debe tener al menos ' + minChars + 'caracteres.');
+                                        charCounter.classList.add('text-danger');
+                                        charCounter.classList.remove('text-success');
+                                    } else {
+                                        motivoTextarea.setCustomValidity('');
+                                        charCounter.classList.remove('text-danger');
+                                        charCounter.classList.add('text-success');
+                                    }
+                                }
+                            });
+
+                            // Añadir el atributo required dinámicamente para anónimos
+                            if (!isAuthenticated) {
+                                motivoTextarea.setAttribute('required', 'required');
                             }
-                        });
+
+                            // Disparar el evento al cargar para validar el estado inicial
+                            document.addEventListener('DOMContentLoaded', () => {
+                                motivoTextarea.dispatchEvent(new Event('input'));
+                            });
+                        /*]]>*/
                     </script>
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             </div>
 
         </div>
