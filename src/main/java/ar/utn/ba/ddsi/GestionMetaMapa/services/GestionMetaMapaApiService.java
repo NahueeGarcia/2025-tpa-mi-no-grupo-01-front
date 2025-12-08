@@ -160,22 +160,22 @@ public class GestionMetaMapaApiService {
     // --- MÉTODOS DE ADMINISTRACIÓN (REQUIEREN TOKEN) ---
 
     public List<HechoDTO> listarHechosPendientes() {
-        return this.webClient.get().uri(metamapaServiceUrl + "/admin/hechos/pendientes")
+        return this.webClient.get().uri(metamapaServiceUrl + "/admin/moderacion/hechos/pendientes")
                 .retrieve().bodyToFlux(HechoDTO.class).collectList().block();
     }
 
     public void aprobarHecho(Long id) {
-        this.webClient.post().uri(metamapaServiceUrl + "/admin/hechos/{id}/aprobar", id)
+        this.webClient.post().uri(metamapaServiceUrl + "/admin/moderacion/hechos/{id}/aprobar", id)
                 .retrieve().bodyToMono(Void.class).block();
     }
 
     public void rechazarHecho(Long id) {
-        this.webClient.post().uri(metamapaServiceUrl + "/admin/hechos/{id}/rechazar", id)
+        this.webClient.post().uri(metamapaServiceUrl + "/admin/moderacion/hechos/{id}/rechazar", id)
                 .retrieve().bodyToMono(Void.class).block();
     }
     
     public void aceptarHechoConModificaciones(Long id, HechoEdicionDTO dto) {
-        this.webClient.put().uri(metamapaServiceUrl + "/admin/hechos/{id}/modificar-y-aceptar", id)
+        this.webClient.put().uri(metamapaServiceUrl + "/admin/moderacion/hechos/{id}/modificar-y-aceptar", id)
                 .bodyValue(dto)
                 .retrieve().bodyToMono(Void.class).block();
     }
