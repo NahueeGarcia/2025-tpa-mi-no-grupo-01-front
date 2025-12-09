@@ -11,7 +11,7 @@
                 <h1 class="mb-4">Modificar y Aceptar Hecho</h1>
                 <div class="card">
                     <div class="card-body">
-                        <form th:action="@{/admin/hechos/{id}/modificar-y-aceptar(id=${hecho.id})}" th:object="${hecho}" method="post">
+                        <form th:action="@{/admin/hechos/{id}/modificar-y-aceptar(id=${idOrigen})}" th:object="${hechoAEditar}" method="post">
                             <div class="mb-3">
                                 <label for="titulo" class="form-label">Título</label>
                                 <input type="text" class="form-control" id="titulo" th:field="*{titulo}" required>

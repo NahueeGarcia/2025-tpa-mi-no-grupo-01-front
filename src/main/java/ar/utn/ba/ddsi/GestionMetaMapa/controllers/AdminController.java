@@ -237,15 +237,25 @@ public class AdminController {
 
     @GetMapping("/hechos/{id}/editar-y-aceptar")
     public String mostrarFormularioEditarAceptar(@PathVariable("id") Long id, Model model) {
-        HechoDTO hecho = adminService.obtenerHechoPorIdOrigen(id);
-        model.addAttribute("hecho", hecho);
-        model.addAttribute("hechoModificado", new HechoEdicionDTO()); // Para el th:object del form
+        HechoDTO hechoOriginal = adminService.obtenerHechoPorIdOrigen(id);
+
+        // Crear el DTO específico para la edición y poblarlo
+        HechoEdicionDTO hechoAEditar = new HechoEdicionDTO();
+        hechoAEditar.setTitulo(hechoOriginal.getTitulo());
+        hechoAEditar.setDescripcion(hechoOriginal.getDescripcion());
+        hechoAEditar.setCategoria(hechoOriginal.getCategoria());
+        hechoAEditar.setLatitud(hechoOriginal.getLatitud());
+        hechoAEditar.setLongitud(hechoOriginal.getLongitud());
+        hechoAEditar.setFecAcontecimiento(hechoOriginal.getFecAcontecimiento());
+
+        model.addAttribute("hechoAEditar", hechoAEditar);
+        model.addAttribute("idOrigen", id); // Pasar el idOrigen para construir la URL del form
         return "admin/editar-hecho-moderacion";
     }
 
     @PostMapping("/hechos/{id}/modificar-y-aceptar")
     public String modificarYConfirmarHecho(@PathVariable("id") Long id,
-                                           @ModelAttribute("hechoModificado") HechoEdicionDTO hechoModificado,
+                                           @ModelAttribute("hechoAEditar") HechoEdicionDTO hechoModificado,
                                            RedirectAttributes redirectAttributes) {
         try {
             adminService.aceptarHechoConModificaciones(id, hechoModificado);

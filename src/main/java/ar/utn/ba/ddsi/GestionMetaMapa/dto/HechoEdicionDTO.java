@@ -13,5 +13,5 @@ public class HechoEdicionDTO {
     private String categoria;
     private String latitud;
     private String longitud;
-    private LocalDateTime fechaAcontecimiento;
+    private LocalDateTime fecAcontecimiento;
 }
