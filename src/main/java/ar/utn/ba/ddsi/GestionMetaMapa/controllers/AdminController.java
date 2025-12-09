@@ -77,6 +77,19 @@ public class AdminController {
         return "redirect:/admin/gestionar-colecciones"; // Redirige a la página de gestión
     }
 
+    @PostMapping("/colecciones/{idColeccion}/fuentes/{idFuente}/procesar")
+    public String procesarFuente(@PathVariable("idColeccion") Long coleccionId,
+                                 @PathVariable("idFuente") Long fuenteId,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+            adminService.procesarFuenteDeColeccion(coleccionId, fuenteId);
+            redirectAttributes.addFlashAttribute("mensaje", "Procesamiento de la fuente iniciado correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al procesar la fuente: " + e.getMessage());
+        }
+        return "redirect:/admin/gestionar-colecciones"; // Redirige a la página de gestión
+    }
+
     @PostMapping("/colecciones/{id}/algoritmo/modificar")
     public String modificarAlgoritmo(@PathVariable("id") Long coleccionId,
                                      @ModelAttribute("modificarAlgoritmo") ModificarAlgoritmoDTO dto,

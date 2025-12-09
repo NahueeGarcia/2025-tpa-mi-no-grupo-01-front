@@ -41,21 +41,24 @@
                                 <td th:text="${coleccion.titulo}">Título</td>
                                 <td th:text="${coleccion.tipoAlgoritmo ?: 'No asignado'}">MAYORIA_SIMPLE</td>
                                 <td>
-                                    <ul class="list-unstyled mb-0">
-                                        <li th:each="fuente : ${coleccion.fuentes}">
-                                            <span class="badge bg-secondary" th:text="${fuente.id}">ID Fuente</span>
-                                            <form th:action="@{/admin/colecciones/{id}/fuentes/{fuenteId}/quitar(id=${coleccion.id},
-fuenteId=${fuente.id})}" method="post" class="d-inline ms-2">
-                                                <input type="hidden" name="_method" value="delete" />
-                                                <button type="submit" class="btn btn-sm btn-outline-danger p-0 px-1" title="Quitar
-fuente">&times;</button>
+                                        <li th:each="fuente : ${coleccion.fuentes}" class="d-flex align-items-center mb-1">
+                                            <span class="badge bg-secondary me-2" th:text="${fuente.id}">ID</span>
+                                            <span th:text="${fuente.nombre}">Nombre de la Fuente</span>
+                                            
+                                            <!-- Formulario para PROCESAR la fuente -->
+                                            <form th:if="${fuente.tipo == 'dataset'}" th:action="@{/admin/colecciones/{id}/fuentes/{fuenteId}/procesar(id=${coleccion.id}, fuenteId=${fuente.id})}" method="post" class="d-inline ms-auto me-1">
+                                                <button type="submit" class="btn btn-sm btn-primary">Procesar</button>
+                                            </form>
+
+                                            <!-- Formulario para QUITAR la fuente -->
+                                            <form th:action="@{/admin/colecciones/{id}/fuentes/{fuenteId}/quitar(id=${coleccion.id}, fuenteId=${fuente.id})}" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Quitar fuente">&times;</button>
                                             </form>
                                         </li>
                                     </ul>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" th:data-bs-target=
-                                            "'#modalFuente' + ${coleccion.id}">Añadir Fuente</button>
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" th:data-bs-target=" '#modalFuente' + ${coleccion.id}">Añadir Fuente</button>
                                     <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" th:data-bs-target=
                                             "'#modalAlgoritmo' + ${coleccion.id}">Cambiar Algoritmo</button>
                                     <a th:href="@{/admin/colecciones/{id}/editar(id=${coleccion.id})}" class="btn btn-sm btn-warning">Editar</a>
