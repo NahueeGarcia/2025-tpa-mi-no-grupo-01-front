@@ -235,9 +235,17 @@ public class AdminController {
         return "redirect:/admin/moderacion-hechos";
     }
 
+    @GetMapping("/hechos/{id}/editar-y-aceptar")
+    public String mostrarFormularioEditarAceptar(@PathVariable("id") Long id, Model model) {
+        HechoDTO hecho = adminService.obtenerHechoPorIdOrigen(id);
+        model.addAttribute("hecho", hecho);
+        model.addAttribute("hechoModificado", new HechoEdicionDTO()); // Para el th:object del form
+        return "admin/editar-hecho-moderacion";
+    }
+
     @PostMapping("/hechos/{id}/modificar-y-aceptar")
     public String modificarYConfirmarHecho(@PathVariable("id") Long id,
-                                           @ModelAttribute("hecho") HechoEdicionDTO hechoModificado,
+                                           @ModelAttribute("hechoModificado") HechoEdicionDTO hechoModificado,
                                            RedirectAttributes redirectAttributes) {
         try {
             adminService.aceptarHechoConModificaciones(id, hechoModificado);

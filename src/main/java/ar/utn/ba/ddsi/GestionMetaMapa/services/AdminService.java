@@ -95,6 +95,14 @@ public class AdminService {
         return apiService.obtenerTodasLasFuentes();
     }
 
+    public HechoDTO obtenerHechoPorId(Long id) {
+        return apiService.obtenerHechoPorId(id);
+    }
+
+    public HechoDTO obtenerHechoPorIdOrigen(Long id) {
+        return apiService.obtenerHechoPorIdOrigen(id);
+    }
+
     public void eliminarFuente(Long fuenteId) {
         apiService.eliminarFuente(fuenteId);
     }
