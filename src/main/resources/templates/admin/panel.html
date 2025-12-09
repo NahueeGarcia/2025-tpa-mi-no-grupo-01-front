@@ -36,8 +36,8 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card text-center h-100">
                         <div class="card-body">
-                            <h5 class="card-title">Hechos Totales</h5>
-                            <p class="card-text display-4" th:text="${resumen.totalHechos}">0</p>
+                            <h5 class="card-title">Hechos Pendientes de Revisión</h5>
+                            <p class="card-text display-4" th:text="${resumen.totalHechosPendientes}">0</p>
                             <a th:href="@{/admin/moderacion-hechos}" class="btn btn-primary">Gestionar</a>
                         </div>
                     </div>

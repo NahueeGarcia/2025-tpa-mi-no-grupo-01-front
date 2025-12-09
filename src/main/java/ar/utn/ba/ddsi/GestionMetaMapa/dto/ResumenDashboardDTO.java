@@ -11,4 +11,5 @@ public class ResumenDashboardDTO {
     private long totalHechos;
     private long totalFuentes;
     private long totalSolicitudesPendientes;
+    private long totalHechosPendientes;
 }
