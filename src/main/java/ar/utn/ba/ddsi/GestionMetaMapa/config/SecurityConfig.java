@@ -46,6 +46,7 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/dashboard",
                                 "/metamapa/colecciones",
+                                "/metamapa/colecciones/**", // <-- AGREGADO
                                 "/metamapa/hechos",      // Permite la lista de hechos
                                 "/metamapa/hechos/**",
                                 "/hechos/**" ,

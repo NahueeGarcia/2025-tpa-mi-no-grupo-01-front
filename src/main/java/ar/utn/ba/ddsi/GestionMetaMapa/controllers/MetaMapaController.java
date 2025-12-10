@@ -116,7 +116,7 @@ public class MetaMapaController {
     }
 
     @GetMapping("/colecciones/{id}/hechos")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VISUALIZADOR', 'CONTRIBUYENTE')")
+    @PreAuthorize("permitAll") // Acceso público para visualizadores no logueados
     public String listarHechosPorColeccion(@PathVariable("id") Long id, @RequestParam(name = "navegacion", defaultValue = "CURADA") String navegacion, Model model, HttpSession session) {
         List<HechoDTO> hechos = metamapaService.obtenerHechosPorColeccion(id, navegacion);
         model.addAttribute("hechos", hechos);
@@ -126,7 +126,7 @@ public class MetaMapaController {
         Long currentUserId = (Long) session.getAttribute("currentUserId");
         model.addAttribute("currentUserId", currentUserId);
 
-        return "hechos-coleccion/lista";
+        return "hechos/lista";
     }
 
     @PostMapping("/solicitudes-eliminacion")

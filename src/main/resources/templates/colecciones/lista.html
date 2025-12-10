@@ -37,7 +37,7 @@
                     <tbody>
                     <tr th:each="coleccion : ${colecciones}">
                         <td th:text="${coleccion.id}"></td>
-                        <td th:text="${coleccion.titulo}"></td>
+                        <td><a th:href="@{/metamapa/colecciones/{id}/hechos(id=${coleccion.id})}" th:text="${coleccion.titulo}"></a></td>
                         <td th:text="${coleccion.descripcion}"></td>
                     </tr>
                     </tbody>
