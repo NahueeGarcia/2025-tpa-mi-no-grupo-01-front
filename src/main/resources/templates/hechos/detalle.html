@@ -27,16 +27,13 @@
                         <!-- Contenido Multimedia -->
                         <div th:if="${hecho.pathContenidoMultimedia != null and !hecho.pathContenidoMultimedia.isEmpty()}">
                             <h5 class="card-title mt-4">Contenido Multimedia</h5>
-                            <div class="mt-3">
-                                <!-- Mostrar imagen si es un formato de imagen web común -->
-                                <div th:if="${#strings.endsWith(hecho.pathContenidoMultimedia, '.jpg') or #strings.endsWith(hecho.pathContenidoMultimedia, '.jpeg') or #strings.endsWith(hecho.pathContenidoMultimedia, '.png') or #strings.endsWith(hecho.pathContenidoMultimedia, '.gif') or #strings.endsWith(hecho.pathContenidoMultimedia, '.webp')}">
-                                    <img src="http://localhost:8081/multimedia/[[${hecho.pathContenidoMultimedia}]]" class="img-fluid rounded" alt="Contenido multimedia del hecho">
-                                </div>
-                                <!-- Mostrar un enlace de descarga para otros tipos de archivo (ej. video) -->
-                                <div th:unless="${#strings.endsWith(hecho.pathContenidoMultimedia, '.jpg') or #strings.endsWith(hecho.pathContenidoMultimedia, '.jpeg') or #strings.endsWith(hecho.pathContenidoMultimedia, '.png') or #strings.endsWith(hecho.pathContenidoMultimedia, '.gif') or #strings.endsWith(hecho.pathContenidoMultimedia, '.webp')}">
-                                    <p>Archivo multimedia disponible para descarga:</p>
-                                    <a th:href="@{'http://localhost:8081/multimedia/' + ${hecho.pathContenidoMultimedia}}" th:text="${hecho.pathContenidoMultimedia}" target="_blank" class="btn btn-secondary">Descargar</a>
-                                </div>
+                            <div class="mt-3 border p-3 rounded">
+                                <p>
+                                    <a th:href="|http://localhost:8081/multimedia/${hecho.pathContenidoMultimedia}|" target="_blank">
+                                        Abrir/Descargar contenido
+                                    </a>
+                                </p>
+                                <img th:src="|http://localhost:8081/multimedia/${hecho.pathContenidoMultimedia}|" class="img-fluid rounded mt-2" alt="Previsualización de contenido multimedia. Si no carga, use el enlace de arriba.">
                             </div>
                         </div>
                     </div>
