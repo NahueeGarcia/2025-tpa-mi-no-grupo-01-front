@@ -35,12 +35,20 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="fecAcontecimiento" class="form-label">Fecha del Acontecimiento</label>
+                                <label for="fecAcontecimiento" class="form-label">Fecha del Acontecimiento <span class="text-danger">*</span></label>
                                 <input type="datetime-local" class="form-control" id="fecAcontecimiento" th:field="*{fecAcontecimiento}" required>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Enviar Hecho</button>
-                            <a th:href="@{/metamapa/mapa}" class="btn btn-secondary">Cancelar</a>
+                            <div class="mb-3">
+                                <label for="pathContenidoMultimedia" class="form-label">Ruta Contenido Multimedia</label>
+                                <input type="text" class="form-control" id="pathContenidoMultimedia" th:field="*{pathContenidoMultimedia}">
+                                <div class="form-text">Ruta al archivo de imagen o video en el servidor del agregador.</div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <a th:href="@{/hechos}" class="btn btn-secondary me-2">Cancelar</a>
+                                <button type="submit" class="btn btn-primary">Crear Hecho</button>
+                            </div>
                         </form>
                     </div>
                 </div>

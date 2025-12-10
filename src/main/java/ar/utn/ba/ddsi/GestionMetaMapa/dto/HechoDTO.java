@@ -23,6 +23,7 @@ public class HechoDTO {
     private String creadorUsername;
     private Long idOrigen;
     private Boolean eliminado;
+    private String pathContenidoMultimedia;
 
     public static HechoDTO toDTO(Long id, String titulo, String descripcion, String categoria, String latitud, String longitud) {
         return HechoDTO
@@ -36,6 +37,7 @@ public class HechoDTO {
                 .fecAcontecimiento(LocalDateTime.now())
                 .fecCarga(LocalDateTime.now())
                 .creadorUsername(null) // Por defecto null al crear un DTO manualmente
+                .pathContenidoMultimedia(null)
                 .build();
     }
 }

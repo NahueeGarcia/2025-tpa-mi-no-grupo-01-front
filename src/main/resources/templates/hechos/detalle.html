@@ -22,22 +22,19 @@
                 <div class="card-body">
                     <p><strong>Categoría:</strong> <span th:text="${hecho.categoria}" class="badge bg-info">Categoría</span></p>
                     <p><strong>Descripción:</strong></p>
-                    <p th:text="${hecho.descripcion}">Descripción detallada del hecho.</p>
-                    <hr>
-                    <p>Ubicación: <span th:text="'Lat: ' + ${hecho.latitud} + ', Lon: ' + ${hecho.longitud}"></span></p>
-                    <p><strong>Fecha del Acontecimiento:</strong> <span th:text="${#temporals.format(hecho.fecAcontecimiento, 'dd/MM/yyyy HH:mm')}">Fecha</span></p>
+                        <p class="card-text" th:text="${hecho.descripcion}"></p>
 
-                    <!-- Tiempo Restante para Editar -->
-                                                        <div th:if="${hecho.fecCarga != null and #authorization.expression('isAuthenticated()') and hecho.creadorUsername != null and hecho.creadorUsername == #authentication.name}">
-                                                            <span th:if="${#temporals.createNow().minusDays(7).isBefore(hecho.fecCarga)}"
-                                                                  th:with="diasRestantes=${T(java.time.temporal.ChronoUnit).DAYS.between(#temporals.createNow(), hecho.fecCarga.plusDays(7))}"
-                                                                  class="badge bg-success fs-6">Te quedan <span th:text="${diasRestantes > 0 ? diasRestantes + ' días' : 'el día de hoy'}"></span> para editar</span>
-                                                            <span th:unless="${hecho.fecCarga != null and #temporals.createNow().minusDays(7).isBefore(hecho.fecCarga)}"
-                                                                  class="badge bg-danger fs-6">Plazo de edición expirado</span>
-                                                        </div>                </div>
-                <div class="card-footer text-muted">
-                    Cargado el: <span th:text="${#temporals.format(hecho.fecCarga, 'dd/MM/yyyy')}">Fecha de Carga</span>
-                </div>
+                        <!-- Contenido Multimedia -->
+                        <div th:if="${hecho.pathContenidoMultimedia != null and !hecho.pathContenidoMultimedia.isEmpty()}">
+                            <h5 class="card-title mt-4">Contenido Multimedia</h5>
+                            <p class="card-text">
+                                <a th:href="${hecho.pathContenidoMultimedia}" th:text="${hecho.pathContenidoMultimedia}" target="_blank"></a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Aportado por: <span th:text="${hecho.creadorUsername ?: 'Anónimo'}"></span>
+                        el <span th:text="${#temporals.format(hecho.fecCarga, 'dd/MM/yyyy HH:mm')}"></span>
             </div>
 
             <!-- Formulario para Solicitud de Eliminación -->

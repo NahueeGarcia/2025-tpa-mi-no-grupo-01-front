@@ -181,6 +181,7 @@ public class MetaMapaController {
 
     @PostMapping("/hechos/crear")
     public String crearHecho(@ModelAttribute("hecho") HechoDTO hecho, RedirectAttributes redirectAttrs) {
+        log.info("[DEBUG] Recibido DTO para crear hecho: {}", hecho.toString());
         try {
             metamapaService.crearHecho(hecho);
             redirectAttrs.addFlashAttribute("mensaje", "Hecho aportado correctamente. Gracias por contribuir.");

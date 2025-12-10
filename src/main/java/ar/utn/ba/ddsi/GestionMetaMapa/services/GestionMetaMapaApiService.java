@@ -3,6 +3,8 @@ package ar.utn.ba.ddsi.GestionMetaMapa.services;
 import ar.utn.ba.ddsi.GestionMetaMapa.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -17,6 +19,7 @@ import java.util.Map;
 @Service
 public class GestionMetaMapaApiService {
 
+    private static final Logger log = LoggerFactory.getLogger(GestionMetaMapaApiService.class);
     private final WebClient webClient;
     private final String authServiceUrl;
     private final String metamapaServiceUrl;
@@ -112,6 +115,7 @@ public class GestionMetaMapaApiService {
     // --- MÉTODOS QUE PUEDEN SER ANÓNIMOS O AUTENTICADOS ---
     
     public void crearHecho(HechoDTO dto) {
+        log.info("[DEBUG] Enviando DTO para crear hecho al gateway: {}", dto.toString());
         this.webClient.post()
                 .uri(metamapaServiceUrl + "/hechos")
                 .bodyValue(dto)
