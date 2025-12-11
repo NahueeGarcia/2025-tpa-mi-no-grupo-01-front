@@ -162,7 +162,7 @@ public class GestionMetaMapaApiService {
         if (fechaInicio != null && !fechaInicio.isBlank()) builder.queryParam("fechaInicio", fechaInicio);
         if (fechaFin != null && !fechaFin.isBlank()) builder.queryParam("fechaFin", fechaFin);
 
-        URI uri = builder.buildAndExpand(id).toUri();
+        URI uri = builder.encode().buildAndExpand(id).toUri();
 
         return this.webClient.get().uri(uri)
                 .retrieve()
