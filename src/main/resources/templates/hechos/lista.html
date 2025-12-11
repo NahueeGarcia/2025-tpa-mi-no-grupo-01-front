@@ -45,14 +45,27 @@
                 <div class="card shadow-sm mb-4" th:if="${coleccionId != null}">
                     <div class="card-header bg-light d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Filtrar Hechos</h5>
-                        <div>
-                            <span class="badge bg-info text-dark me-2" th:text="'Modo: ' + ${navegacion}"></span>
-                        </div>
                     </div>
                     <div class="card-body">
                         <form th:action="@{/metamapa/colecciones/{id}/hechos(id=${coleccionId})}" method="get" class="row g-3">
-                            <!-- Preservar el modo de navegación -->
-                            <input type="hidden" name="navegacion" th:value="${navegacion}">
+                            
+                            <!-- Selector de Modo de Navegación -->
+                            <div class="col-12 mb-2">
+                                <label class="form-label d-block fw-bold">Modo de Navegación:</label>
+                                <div class="btn-group" role="group" aria-label="Modo de Navegación">
+                                    <input type="radio" class="btn-check" name="navegacion" id="navCurada" value="CURADA" autocomplete="off" 
+                                           th:checked="${navegacion == 'CURADA' or navegacion == null}" onchange="this.form.submit()">
+                                    <label class="btn btn-outline-success" for="navCurada" title="Muestra solo hechos verificados por consenso">
+                                        <i class="bi bi-shield-check"></i> Curada
+                                    </label>
+
+                                    <input type="radio" class="btn-check" name="navegacion" id="navIrrestricta" value="IRRESTRICTA" autocomplete="off" 
+                                           th:checked="${navegacion == 'IRRESTRICTA'}" onchange="this.form.submit()">
+                                    <label class="btn btn-outline-warning" for="navIrrestricta" title="Muestra todos los hechos sin filtro de consenso">
+                                        <i class="bi bi-exclamation-triangle"></i> Irrestricta
+                                    </label>
+                                </div>
+                            </div>
 
                             <div class="col-md-3">
                                 <label for="categoria" class="form-label">Categoría</label>

@@ -130,7 +130,7 @@ public class MetaMapaController {
         List<HechoDTO> hechos = metamapaService.obtenerHechosPorColeccion(id, navegacion, categoria, fechaInicio, fechaFin, ubicacion);
         model.addAttribute("hechos", hechos);
         model.addAttribute("titulo", "Listado de hechos por colección");
-        model.addAttribute("totalDeHechos", hechos.size());
+        model.addAttribute("totalHechos", hechos.size());
         
         Long currentUserId = (Long) session.getAttribute("currentUserId");
         model.addAttribute("currentUserId", currentUserId);
