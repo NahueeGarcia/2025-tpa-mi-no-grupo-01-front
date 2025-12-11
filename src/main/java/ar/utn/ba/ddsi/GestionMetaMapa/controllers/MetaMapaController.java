@@ -117,14 +117,29 @@ public class MetaMapaController {
 
     @GetMapping("/colecciones/{id}/hechos")
     @PreAuthorize("permitAll") // Acceso público para visualizadores no logueados
-    public String listarHechosPorColeccion(@PathVariable("id") Long id, @RequestParam(name = "navegacion", defaultValue = "CURADA") String navegacion, Model model, HttpSession session) {
-        List<HechoDTO> hechos = metamapaService.obtenerHechosPorColeccion(id, navegacion);
+    public String listarHechosPorColeccion(
+            @PathVariable("id") Long id,
+            @RequestParam(name = "navegacion", defaultValue = "CURADA") String navegacion,
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String fechaInicio,
+            @RequestParam(required = false) String fechaFin,
+            Model model,
+            HttpSession session
+    ) {
+        List<HechoDTO> hechos = metamapaService.obtenerHechosPorColeccion(id, navegacion, categoria, fechaInicio, fechaFin);
         model.addAttribute("hechos", hechos);
         model.addAttribute("titulo", "Listado de hechos por colección");
         model.addAttribute("totalDeHechos", hechos.size());
         
         Long currentUserId = (Long) session.getAttribute("currentUserId");
         model.addAttribute("currentUserId", currentUserId);
+
+        // Añadir filtros al modelo para mantener el estado en la vista
+        model.addAttribute("filtroCategoria", categoria);
+        model.addAttribute("filtroFechaInicio", fechaInicio);
+        model.addAttribute("filtroFechaFin", fechaFin);
+        model.addAttribute("navegacion", navegacion);
+        model.addAttribute("coleccionId", id);
 
         return "hechos/lista";
     }

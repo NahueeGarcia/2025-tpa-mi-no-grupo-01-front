@@ -12,7 +12,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -152,9 +154,17 @@ public class GestionMetaMapaApiService {
                 .block();
     }
 
-    public List<HechoDTO> obtenerHechosPorColeccion(Long id, String navegacion) {
-        String url = metamapaServiceUrl + "/colecciones/" + id + "/hechos?navegacion=" + navegacion;
-        return this.webClient.get().uri(url)
+    public List<HechoDTO> obtenerHechosPorColeccion(Long id, String navegacion, String categoria, String fechaInicio, String fechaFin) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(metamapaServiceUrl + "/colecciones/{id}/hechos")
+                .queryParam("navegacion", navegacion);
+
+        if (categoria != null && !categoria.isBlank()) builder.queryParam("categoria", categoria);
+        if (fechaInicio != null && !fechaInicio.isBlank()) builder.queryParam("fechaInicio", fechaInicio);
+        if (fechaFin != null && !fechaFin.isBlank()) builder.queryParam("fechaFin", fechaFin);
+
+        URI uri = builder.buildAndExpand(id).toUri();
+
+        return this.webClient.get().uri(uri)
                 .retrieve()
                 .bodyToFlux(HechoDTO.class)
                 .collectList()

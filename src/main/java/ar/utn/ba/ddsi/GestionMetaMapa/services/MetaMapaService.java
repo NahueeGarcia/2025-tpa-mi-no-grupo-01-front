@@ -40,9 +40,9 @@ public class MetaMapaService {
      * Reincorporado: Obtiene los hechos de una colección específica.
      * Esta operación requiere que el usuario esté autenticado.
      */
-    public List<HechoDTO> obtenerHechosPorColeccion(Long id, String navegacion) {
+    public List<HechoDTO> obtenerHechosPorColeccion(Long id, String navegacion, String categoria, String fechaInicio, String fechaFin) {
         // El filtro automático en apiService se encargará del token
-        return apiService.obtenerHechosPorColeccion(id, navegacion);
+        return apiService.obtenerHechosPorColeccion(id, navegacion, categoria, fechaInicio, fechaFin);
     }
 
     public void crearSolicitudEliminacion(SolicitudEliminacionDTO solicitud){
