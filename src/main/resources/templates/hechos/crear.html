@@ -24,6 +24,17 @@
                                 <label for="categoria" class="form-label">Categoría</label>
                                 <input type="text" class="form-control" id="categoria" th:field="*{categoria}" required>
                             </div>
+
+                            <!-- Buscador de Direcciones -->
+                            <div class="mb-3 p-3 bg-light border rounded">
+                                <label for="buscarDireccion" class="form-label fw-bold"><i class="bi bi-search"></i> Buscar Ubicación (Autocompletar Coordenadas)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="buscarDireccion" placeholder="Escriba una dirección (Ej: Av. Medrano 951, Buenos Aires)">
+                                    <button class="btn btn-info text-white" type="button" id="btnBuscarDir">Buscar Coordenadas</button>
+                                </div>
+                                <div id="resultadoBusqueda" class="form-text mt-2 text-muted fst-italic"></div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="latitud" class="form-label">Latitud</label>
@@ -34,6 +45,37 @@
                                     <input type="text" class="form-control" id="longitud" th:field="*{longitud}" required>
                                 </div>
                             </div>
+
+                            <script>
+                                document.getElementById('btnBuscarDir').addEventListener('click', function() {
+                                    const query = document.getElementById('buscarDireccion').value;
+                                    const resultadoDiv = document.getElementById('resultadoBusqueda');
+                                    
+                                    if (!query) {
+                                        resultadoDiv.innerHTML = '<span class="text-danger">Por favor ingrese una dirección.</span>';
+                                        return;
+                                    }
+
+                                    resultadoDiv.innerHTML = '<span class="text-primary">Buscando...</span>';
+
+                                    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`)
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data && data.length > 0) {
+                                                const lugar = data[0];
+                                                document.getElementById('latitud').value = lugar.lat;
+                                                document.getElementById('longitud').value = lugar.lon;
+                                                resultadoDiv.innerHTML = `<span class="text-success"><i class="bi bi-check-circle"></i> Encontrado: ${lugar.display_name}</span>`;
+                                            } else {
+                                                resultadoDiv.innerHTML = '<span class="text-danger">No se encontraron resultados. Intente ser más específico.</span>';
+                                            }
+                                        })
+                                        .catch(err => {
+                                            console.error(err);
+                                            resultadoDiv.innerHTML = '<span class="text-danger">Error al conectar con el servicio de mapas.</span>';
+                                        });
+                                });
+                            </script>
                             <div class="mb-3">
                                 <label for="fecAcontecimiento" class="form-label">Fecha del Acontecimiento <span class="text-danger">*</span></label>
                                 <input type="datetime-local" class="form-control" id="fecAcontecimiento" th:field="*{fecAcontecimiento}" required>

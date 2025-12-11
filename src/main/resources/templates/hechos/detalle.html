@@ -21,6 +21,40 @@
                 </div>
                 <div class="card-body">
                     <p><strong>Categoría:</strong> <span th:text="${hecho.categoria}" class="badge bg-info">Categoría</span></p>
+                    
+                    <!-- Ubicación con Geocodificación Inversa -->
+                    <p><strong>Ubicación:</strong> 
+                        <span id="ubicacion-texto" class="text-muted">
+                            <i class="bi bi-geo-alt"></i> <span th:text="'(' + ${hecho.latitud} + ', ' + ${hecho.longitud} + ')'"></span>
+                        </span>
+                    </p>
+                    <input type="hidden" id="lat-data" th:value="${hecho.latitud}">
+                    <input type="hidden" id="lon-data" th:value="${hecho.longitud}">
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const lat = document.getElementById('lat-data').value;
+                            const lon = document.getElementById('lon-data').value;
+                            const textoUbicacion = document.getElementById('ubicacion-texto');
+
+                            if (lat && lon) {
+                                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data && data.display_name) {
+                                            // Extraer partes relevantes (Ciudad, Provincia, País) para que no sea tan largo
+                                            let parts = data.display_name.split(',');
+                                            // Tomar las primeras 3 partes o mostrar todo si es corto
+                                            let shortName = parts.slice(0, 3).join(','); 
+                                            textoUbicacion.innerHTML = `<i class="bi bi-geo-alt-fill text-danger"></i> ${shortName}`;
+                                            textoUbicacion.title = data.display_name; // Tooltip con nombre completo
+                                        }
+                                    })
+                                    .catch(err => console.error("Error obteniendo ubicación:", err));
+                            }
+                        });
+                    </script>
+
                     <p><strong>Descripción:</strong></p>
                         <p class="card-text" th:text="${hecho.descripcion}"></p>
 
