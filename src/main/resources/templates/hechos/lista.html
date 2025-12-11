@@ -59,14 +59,18 @@
                                 <input type="text" class="form-control" id="categoria" name="categoria" th:value="${filtroCategoria}" placeholder="Ej: Incendio">
                             </div>
                             <div class="col-md-3">
+                                <label for="ubicacion" class="form-label">Ubicación</label>
+                                <input type="text" class="form-control" id="ubicacion" name="ubicacion" th:value="${filtroUbicacion}" placeholder="Ej: Córdoba">
+                            </div>
+                            <div class="col-md-2">
                                 <label for="fechaInicio" class="form-label">Fecha Inicio</label>
                                 <input type="datetime-local" class="form-control" id="fechaInicio" name="fechaInicio" th:value="${filtroFechaInicio}">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label for="fechaFin" class="form-label">Fecha Fin</label>
                                 <input type="datetime-local" class="form-control" id="fechaFin" name="fechaFin" th:value="${filtroFechaFin}">
                             </div>
-                            <div class="col-md-3 d-flex align-items-end gap-2">
+                            <div class="col-md-2 d-flex align-items-end gap-2">
                                 <button type="submit" class="btn btn-primary flex-grow-1">Filtrar</button>
                                 <a th:href="@{/metamapa/colecciones/{id}/hechos(id=${coleccionId}, navegacion=${navegacion})}" class="btn btn-secondary" title="Limpiar Filtros">
                                     <i class="bi bi-x-lg"></i>

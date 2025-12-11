@@ -123,10 +123,11 @@ public class MetaMapaController {
             @RequestParam(required = false) String categoria,
             @RequestParam(required = false) String fechaInicio,
             @RequestParam(required = false) String fechaFin,
+            @RequestParam(required = false) String ubicacion,
             Model model,
             HttpSession session
     ) {
-        List<HechoDTO> hechos = metamapaService.obtenerHechosPorColeccion(id, navegacion, categoria, fechaInicio, fechaFin);
+        List<HechoDTO> hechos = metamapaService.obtenerHechosPorColeccion(id, navegacion, categoria, fechaInicio, fechaFin, ubicacion);
         model.addAttribute("hechos", hechos);
         model.addAttribute("titulo", "Listado de hechos por colección");
         model.addAttribute("totalDeHechos", hechos.size());
@@ -138,6 +139,7 @@ public class MetaMapaController {
         model.addAttribute("filtroCategoria", categoria);
         model.addAttribute("filtroFechaInicio", fechaInicio);
         model.addAttribute("filtroFechaFin", fechaFin);
+        model.addAttribute("filtroUbicacion", ubicacion);
         model.addAttribute("navegacion", navegacion);
         model.addAttribute("coleccionId", id);
 

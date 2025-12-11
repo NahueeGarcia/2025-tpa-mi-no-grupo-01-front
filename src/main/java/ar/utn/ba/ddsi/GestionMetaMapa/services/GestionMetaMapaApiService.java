@@ -154,13 +154,14 @@ public class GestionMetaMapaApiService {
                 .block();
     }
 
-    public List<HechoDTO> obtenerHechosPorColeccion(Long id, String navegacion, String categoria, String fechaInicio, String fechaFin) {
+    public List<HechoDTO> obtenerHechosPorColeccion(Long id, String navegacion, String categoria, String fechaInicio, String fechaFin, String ubicacion) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(metamapaServiceUrl + "/colecciones/{id}/hechos")
                 .queryParam("navegacion", navegacion);
 
         if (categoria != null && !categoria.isBlank()) builder.queryParam("categoria", categoria);
         if (fechaInicio != null && !fechaInicio.isBlank()) builder.queryParam("fechaInicio", fechaInicio);
         if (fechaFin != null && !fechaFin.isBlank()) builder.queryParam("fechaFin", fechaFin);
+        if (ubicacion != null && !ubicacion.isBlank()) builder.queryParam("ubicacion", ubicacion);
 
         URI uri = builder.encode().buildAndExpand(id).toUri();
 
