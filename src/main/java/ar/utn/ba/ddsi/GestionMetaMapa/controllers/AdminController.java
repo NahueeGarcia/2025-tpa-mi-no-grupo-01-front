@@ -278,4 +278,15 @@ public class AdminController {
         }
         return "redirect:/admin/moderacion-hechos";
     }
+
+    @PostMapping("/evaluacion-consensos")
+    public String forzarEvaluacionConsensos(RedirectAttributes redirectAttributes) {
+        try {
+            adminService.forzarEvaluacionConsensos();
+            redirectAttributes.addFlashAttribute("mensaje", "Evaluación de consensos ejecutada correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al ejecutar la evaluación de consensos: " + e.getMessage());
+        }
+        return "redirect:/admin/panel";
+    }
 }

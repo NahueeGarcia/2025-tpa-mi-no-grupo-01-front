@@ -66,6 +66,11 @@
                             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrearFuente">
                                 <i class="bi bi-plus-circle"></i> Crear Nueva Fuente
                             </button>
+                            <form th:action="@{/admin/evaluacion-consensos}" method="post" class="d-inline-block ms-2">
+                                <button type="submit" class="btn btn-warning text-dark">
+                                    <i class="bi bi-arrow-repeat"></i> Forzar Evaluación de Consensos
+                                </button>
+                            </form>
                             <!-- Otros botones de acción rápida podrían ir aquí -->
                         </div>
                     </div>

@@ -128,8 +128,19 @@ public class MetaMapaController {
             HttpSession session
     ) {
         List<HechoDTO> hechos = metamapaService.obtenerHechosPorColeccion(id, navegacion, categoria, fechaInicio, fechaFin, ubicacion);
+        
+        String tituloColeccion = "Colección";
+        try {
+            ColeccionDTO coleccion = metamapaService.obtenerColeccionPorId(id);
+            if (coleccion != null) {
+                tituloColeccion = coleccion.getTitulo();
+            }
+        } catch (Exception e) {
+            log.error("No se pudo obtener el nombre de la colección", e);
+        }
+
         model.addAttribute("hechos", hechos);
-        model.addAttribute("titulo", "Listado de hechos por colección");
+        model.addAttribute("titulo", tituloColeccion);
         model.addAttribute("totalHechos", hechos.size());
         
         Long currentUserId = (Long) session.getAttribute("currentUserId");

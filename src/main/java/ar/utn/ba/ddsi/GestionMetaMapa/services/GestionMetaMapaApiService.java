@@ -313,4 +313,11 @@ public class GestionMetaMapaApiService {
                 .bodyToMono(Void.class)
                 .block();
     }
+
+    public void forzarEvaluacionConsensos() {
+        this.webClient.post().uri(metamapaServiceUrl + "/admin/evaluacion-consensos")
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
 }

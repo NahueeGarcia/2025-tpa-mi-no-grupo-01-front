@@ -106,4 +106,8 @@ public class AdminService {
     public void eliminarFuente(Long fuenteId) {
         apiService.eliminarFuente(fuenteId);
     }
+
+    public void forzarEvaluacionConsensos() {
+        apiService.forzarEvaluacionConsensos();
+    }
 }
