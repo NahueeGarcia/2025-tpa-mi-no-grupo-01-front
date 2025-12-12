@@ -273,7 +273,7 @@ public class GestionMetaMapaApiService {
 
     public ColeccionDTO obtenerColeccionPorId(Long coleccionId) {
         return this.webClient.get()
-                .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)
+                .uri(metamapaServiceUrl + "/colecciones/{id}", coleccionId)
                 .retrieve()
                 .bodyToMono(ColeccionDTO.class)
                 .block();
