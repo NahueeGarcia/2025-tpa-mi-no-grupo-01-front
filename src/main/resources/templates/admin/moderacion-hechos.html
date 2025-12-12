@@ -45,7 +45,7 @@
                             <tbody>
                             <tr th:each="hecho : ${hechosPendientes}">
                                 <td th:text="${hecho.id}"></td>
-                                <td><a th:href="@{/metamapa/hechos/{id}(id=${hecho.id})}" th:text="${hecho.titulo}"></a></td>
+                                <td><span th:text="${hecho.titulo}"></span></td>
                                 <td th:text="${#strings.abbreviate(hecho.descripcion, 50)}"></td>
                                 <td th:text="${hecho.categoria}"></td>
                                 <td th:text="${#temporals.format(hecho.fecCarga, 'dd/MM/yyyy HH:mm')}"></td>
