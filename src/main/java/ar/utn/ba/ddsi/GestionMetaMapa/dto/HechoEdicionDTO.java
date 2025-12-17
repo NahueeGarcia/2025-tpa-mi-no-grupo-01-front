@@ -14,6 +14,5 @@ public class HechoEdicionDTO {
     private String categoria;
     private String latitud;
     private String longitud;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime fecAcontecimiento;
+    private String fechaAcontecimiento;
 }

@@ -259,7 +259,9 @@ public class AdminController {
         hechoAEditar.setCategoria(hechoOriginal.getCategoria());
         hechoAEditar.setLatitud(hechoOriginal.getLatitud());
         hechoAEditar.setLongitud(hechoOriginal.getLongitud());
-        hechoAEditar.setFecAcontecimiento(hechoOriginal.getFecAcontecimiento());
+        if (hechoOriginal.getFecAcontecimiento() != null) {
+            hechoAEditar.setFechaAcontecimiento(hechoOriginal.getFecAcontecimiento().toString());
+        }
 
         model.addAttribute("hechoAEditar", hechoAEditar);
         model.addAttribute("idOrigen", id); // Pasar el idOrigen para construir la URL del form
