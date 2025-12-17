@@ -20,8 +20,6 @@
 
                     <!-- Enlaces de navegación públicos para visualizadores -->
                     <a class="nav-link" th:if="${pageContext != 'landing'}" th:href="@{/dashboard}">Dashboard</a>
-                    <a class="nav-link" th:if="${pageContext != 'landing'}" th:href="@{/metamapa/hechos}">Hechos</a>
-                    <a class="nav-link" th:if="${pageContext != 'landing'}" th:href="@{/metamapa/colecciones}">Colecciones</a>
                     <a class="nav-link" th:if="${pageContext != 'landing'}" th:href="@{/metamapa/mapa}">Mapa</a>
 
                     <!-- Botón "Ingresar como Visualizador" solo en la Landing Page -->
@@ -40,8 +38,6 @@
                      sec:authorize="isAuthenticated()">
 
                     <a class="nav-link" th:href="@{/dashboard}">Dashboard</a>
-                    <a class="nav-link" th:href="@{/metamapa/hechos}">Hechos</a>
-                    <a class="nav-link" th:href="@{/metamapa/colecciones}">Colecciones</a>
                     <a class="nav-link" th:href="@{/metamapa/mapa}">Mapa</a>
 
                     <a class="nav-link fw-bold text-warning" th:href="@{/admin/panel}" sec:authorize="hasRole('ADMIN')">

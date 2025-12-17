@@ -32,22 +32,28 @@
             <h2 class="text-center mb-4">Colecciones y Hechos Destacados</h2>
             <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-img-wrapper"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/Deerfire.jpg" class="card-img-top" alt="Ejemplo"></div>
-                        <div class="card-body"><h5 class="card-title">Incendio Forestal 2024</h5></div>
-                    </div>
+                    <a th:href="@{/metamapa/colecciones}" class="text-decoration-none text-dark">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-img-wrapper"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/Deerfire.jpg" class="card-img-top" alt="Ejemplo"></div>
+                            <div class="card-body"><h5 class="card-title">Incendio Forestal 2024</h5></div>
+                        </div>
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-img-wrapper"><img src="https://farn.org.ar/wp-content/uploads/2023/12/corrientes-inundaciones.jpg" class="card-img-top" alt="Ejemplo"></div>
-                        <div class="card-body"><h5 class="card-title">Temporal en Bahía Blanca</h5></div>
-                    </div>
+                    <a th:href="@{/metamapa/hechos(ubicacion='Bahia Blanca')}" class="text-decoration-none text-dark">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-img-wrapper"><img src="https://farn.org.ar/wp-content/uploads/2023/12/corrientes-inundaciones.jpg" class="card-img-top" alt="Ejemplo"></div>
+                            <div class="card-body"><h5 class="card-title">Temporal en Bahía Blanca</h5></div>
+                        </div>
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-img-wrapper"><img src="https://www.infobae.com/resizer/v2/SWIZ3OFPINASBGAMUBKUWEX7BQ.jpg?auth=3edbac23ea07fdf41c9e25bcf93e4222437163af525674dc47910252eb4e6750&smart=true&width=1200&height=824&quality=85" class="card-img-top" alt="Ejemplo"></div>
-                        <div class="card-body"><h5 class="card-title">Nevada en Buenos Aires</h5></div>
-                    </div>
+                    <a th:href="@{/metamapa/hechos(ubicacion='Buenos Aires', categoria='Nevada')}" class="text-decoration-none text-dark">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-img-wrapper"><img src="https://www.infobae.com/resizer/v2/SWIZ3OFPINASBGAMUBKUWEX7BQ.jpg?auth=3edbac23ea07fdf41c9e25bcf93e4222437163af525674dc47910252eb4e6750&smart=true&width=1200&height=824&quality=85" class="card-img-top" alt="Ejemplo"></div>
+                            <div class="card-body"><h5 class="card-title">Nevada en Buenos Aires</h5></div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </section>
