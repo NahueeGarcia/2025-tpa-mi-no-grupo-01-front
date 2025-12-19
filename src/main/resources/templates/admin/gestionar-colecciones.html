@@ -118,7 +118,8 @@
                                 <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="tipoAlgoritmo" class="form-label">Algoritmo de Consenso</label>
-                                        <select class="form-select" id="tipoAlgoritmo" th:field="*{tipo}" required>
+                                        <select class="form-select" id="tipoAlgoritmo" th:field="*{tipo}">
+					    <option value="">Sin Algoritmo (Todos Válidos)</option>
                                             <option value="MAYORIA_SIMPLE">Mayoría Simple</option>
                                             <option value="CONSENSO_ABSOLUTO">Consenso Absoluto</option>
                                             <option value="MULTIPLES_MENCIONES">Múltiples Menciones</option>
