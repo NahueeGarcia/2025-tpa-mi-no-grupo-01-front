@@ -279,6 +279,14 @@ public class GestionMetaMapaApiService {
                 .block();
     }
 
+    public ColeccionDTO obtenerColeccionPorIdAdmin(Long coleccionId) {
+        return this.webClient.get()
+                .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)
+                .retrieve()
+                .bodyToMono(ColeccionDTO.class)
+                .block();
+    }
+
     public void modificarColeccion(Long coleccionId, ColeccionDTO dto) {
         this.webClient.put()
                 .uri(metamapaServiceUrl + "/admin/colecciones/{id}", coleccionId)

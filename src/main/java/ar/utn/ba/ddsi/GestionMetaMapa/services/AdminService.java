@@ -80,7 +80,7 @@ public class AdminService {
     }
 
     public ColeccionDTO obtenerColeccionPorId(Long coleccionId) {
-        return apiService.obtenerColeccionPorId(coleccionId);
+        return apiService.obtenerColeccionPorIdAdmin(coleccionId);
     }
 
     public void modificarColeccion(Long coleccionId, ColeccionDTO coleccionDTO) {
