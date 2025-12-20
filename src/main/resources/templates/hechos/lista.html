@@ -20,7 +20,12 @@
     <main class="mt-4">
         <!-- 2. Título y Contador de Hechos -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 th:text="${titulo}">Listado de Hechos</h2>
+            <div>
+                <h2 th:text="${titulo}" class="mb-0">Listado de Hechos</h2>
+                <small class="text-muted" th:if="${coleccionId != null}">
+                    <i class="bi bi-gear-wide-connected"></i> Algoritmo: <span th:text="${algoritmoColeccion}" class="fw-bold text-primary"></span>
+                </small>
+            </div>
             <span class="badge bg-primary rounded-pill fs-6" th:text="${totalHechos} + ' Hechos en total'"></span>
         </div>
 

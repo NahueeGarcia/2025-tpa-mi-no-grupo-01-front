@@ -291,4 +291,15 @@ public class AdminController {
         }
         return "redirect:/admin/panel";
     }
+
+    @PostMapping("/refrescar-colecciones")
+    public String forzarRefrescoColecciones(RedirectAttributes redirectAttributes) {
+        try {
+            adminService.forzarRefrescoColecciones();
+            redirectAttributes.addFlashAttribute("mensaje", "Refresco de colecciones ejecutado correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al refrescar colecciones: " + e.getMessage());
+        }
+        return "redirect:/admin/panel";
+    }
 }

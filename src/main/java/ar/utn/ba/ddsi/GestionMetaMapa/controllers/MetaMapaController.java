@@ -130,17 +130,22 @@ public class MetaMapaController {
         List<HechoDTO> hechos = metamapaService.obtenerHechosPorColeccion(id, navegacion, categoria, fechaInicio, fechaFin, ubicacion);
         
         String tituloColeccion = "Colección";
+        String algoritmoColeccion = "Sin Algoritmo";
         try {
             ColeccionDTO coleccion = metamapaService.obtenerColeccionPorId(id);
             if (coleccion != null) {
                 tituloColeccion = coleccion.getTitulo();
+                if (coleccion.getTipoAlgoritmo() != null && !coleccion.getTipoAlgoritmo().isEmpty()) {
+                    algoritmoColeccion = coleccion.getTipoAlgoritmo();
+                }
             }
         } catch (Exception e) {
-            log.error("No se pudo obtener el nombre de la colección", e);
+            log.error("No se pudo obtener la colección", e);
         }
 
         model.addAttribute("hechos", hechos);
         model.addAttribute("titulo", tituloColeccion);
+        model.addAttribute("algoritmoColeccion", algoritmoColeccion);
         model.addAttribute("totalHechos", hechos.size());
         
         Long currentUserId = (Long) session.getAttribute("currentUserId");

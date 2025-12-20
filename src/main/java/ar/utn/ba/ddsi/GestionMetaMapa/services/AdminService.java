@@ -110,4 +110,8 @@ public class AdminService {
     public void forzarEvaluacionConsensos() {
         apiService.forzarEvaluacionConsensos();
     }
+    
+    public void forzarRefrescoColecciones() {
+        apiService.forzarRefrescoColecciones();
+    }
 }

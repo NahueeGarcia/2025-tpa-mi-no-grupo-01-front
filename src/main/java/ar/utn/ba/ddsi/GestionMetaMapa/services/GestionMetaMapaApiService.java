@@ -320,4 +320,11 @@ public class GestionMetaMapaApiService {
                 .bodyToMono(Void.class)
                 .block();
     }
+    
+    public void forzarRefrescoColecciones() {
+        this.webClient.post().uri(metamapaServiceUrl + "/admin/refrescar-colecciones")
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
 }

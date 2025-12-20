@@ -28,6 +28,26 @@
                                 <option value="MULTIPLES_MENCIONES">Múltiples Menciones</option>
                             </select>
                         </div>
+
+                        <hr class="my-4">
+                        <h4>Criterios de Pertenencia</h4>
+                        <p class="text-muted small">Defina filtros automáticos para aceptar hechos en esta colección. Deje en blanco para no filtrar.</p>
+
+                        <div class="mb-3">
+                            <label for="criterioCategoria" class="form-label">Categoría (Coincidencia parcial)</label>
+                            <input type="text" class="form-control" id="criterioCategoria" th:field="*{criterioCategoria}" placeholder="Ej: Incendio">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="criterioFechaInicio" class="form-label">Fecha Inicio</label>
+                                <input type="datetime-local" class="form-control" id="criterioFechaInicio" th:field="*{criterioFechaInicio}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="criterioFechaFin" class="form-label">Fecha Fin</label>
+                                <input type="datetime-local" class="form-control" id="criterioFechaFin" th:field="*{criterioFechaFin}">
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Crear Colección</button>
                         <a th:href="@{/admin/gestionar-colecciones}" class="btn btn-secondary">Cancelar</a>
                     </form>

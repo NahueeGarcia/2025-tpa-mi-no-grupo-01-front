@@ -18,5 +18,8 @@ public class ColeccionDTO {
     private String tipoAlgoritmo;
     private List<FuenteDTO> fuentes; // Usamos el FuenteDTO que ya existe en el frontend
 
-
+    // Criterios de Pertenencia
+    private String criterioCategoria;
+    private String criterioFechaInicio; // Usaremos String para simplificar el transporte y parseo inicial
+    private String criterioFechaFin;
 }

@@ -18,6 +18,24 @@
                     <label for="descripcion" class="form-label">Descripción</label>
                     <textarea class="form-control" id="descripcion" th:field="*{descripcion}" rows="3" required></textarea>
                 </div>
+
+                <hr class="my-4">
+                <h4>Criterios de Pertenencia</h4>
+                <div class="mb-3">
+                    <label for="criterioCategoria" class="form-label">Categoría (Coincidencia parcial)</label>
+                    <input type="text" class="form-control" id="criterioCategoria" th:field="*{criterioCategoria}">
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="criterioFechaInicio" class="form-label">Fecha Inicio</label>
+                        <input type="datetime-local" class="form-control" id="criterioFechaInicio" th:field="*{criterioFechaInicio}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="criterioFechaFin" class="form-label">Fecha Fin</label>
+                        <input type="datetime-local" class="form-control" id="criterioFechaFin" th:field="*{criterioFechaFin}">
+                    </div>
+                </div>
+
                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                 <a th:href="@{/admin/gestionar-colecciones}" class="btn btn-secondary">Cancelar</a>
             </form>
