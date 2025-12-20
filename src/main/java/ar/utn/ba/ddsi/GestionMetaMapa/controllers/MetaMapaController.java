@@ -209,6 +209,7 @@ public class MetaMapaController {
     @GetMapping("/hechos/nuevo")
     public String mostrarFormularioCrearHecho(Model model) {
         model.addAttribute("hecho", new HechoDTO());
+        model.addAttribute("archivosMultimedia", metamapaService.obtenerArchivosMultimedia());
         return "hechos/crear";
     }
 
@@ -237,6 +238,7 @@ public class MetaMapaController {
         }
 
         model.addAttribute("hecho", hecho);
+        model.addAttribute("archivosMultimedia", metamapaService.obtenerArchivosMultimedia());
         return "hechos/editar";
     }
 

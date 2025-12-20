@@ -40,6 +40,17 @@
                                 <input type="datetime-local" class="form-control" id="fecAcontecimiento" th:field="*{fecAcontecimiento}" required>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="pathContenidoMultimedia" class="form-label">Contenido Multimedia</label>
+                                <select class="form-select" id="pathContenidoMultimedia" th:field="*{pathContenidoMultimedia}">
+                                    <option value="">-- Sin Multimedia --</option>
+                                    <option th:each="archivo : ${archivosMultimedia}" 
+                                            th:value="${archivo}" 
+                                            th:text="${archivo}"></option>
+                                </select>
+                                <div class="form-text">Seleccione un archivo de la carpeta multimedia del servidor.</div>
+                            </div>
+
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                             <a th:href="@{/metamapa/hechos/{id}(id=${hecho.id})}" class="btn btn-secondary">Cancelar</a>
                         </form>

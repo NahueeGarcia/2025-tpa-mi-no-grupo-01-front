@@ -7,9 +7,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Controller
 @RequestMapping("/admin")
@@ -19,11 +21,22 @@ public class AdminController {
 
     private final AdminService adminService;
 
+
+
+
     @GetMapping("/panel")
     public String panel(Model model) {
-        // Obtenemos el resumen completo en una sola llamada
-        ResumenDashboardDTO resumen = adminService.obtenerResumenDashboard();
-        model.addAttribute("resumen", resumen);
+        try {
+            // Obtenemos el resumen completo en una sola llamada
+            ResumenDashboardDTO resumen = adminService.obtenerResumenDashboard();
+            model.addAttribute("resumen", resumen);
+        } catch (WebClientResponseException.TooManyRequests e) {
+            model.addAttribute("error", "⚠️ Ha realizado demasiadas peticiones. Por favor espere un minuto antes de recargar.");
+            model.addAttribute("resumen", new ResumenDashboardDTO()); // Objeto vacío para evitar NullPointer en vista
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar el panel: " + e.getMessage());
+            model.addAttribute("resumen", new ResumenDashboardDTO());
+        }
 
         // También preparamos los objetos para los modales
         model.addAttribute("nuevaFuente", new FuenteDTO());

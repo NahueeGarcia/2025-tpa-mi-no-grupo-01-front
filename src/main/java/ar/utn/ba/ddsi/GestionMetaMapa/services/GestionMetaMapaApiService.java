@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import org.springframework.core.ParameterizedTypeReference;
 
 @Service
 public class GestionMetaMapaApiService {
@@ -333,6 +334,15 @@ public class GestionMetaMapaApiService {
         this.webClient.post().uri(metamapaServiceUrl + "/admin/refrescar-colecciones")
                 .retrieve()
                 .bodyToMono(Void.class)
+                .block();
+    }
+
+
+
+    public List<String> obtenerArchivosMultimedia() {
+        return this.webClient.get().uri(metamapaServiceUrl + "/multimedia/files")
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<String>>() {})
                 .block();
     }
 }

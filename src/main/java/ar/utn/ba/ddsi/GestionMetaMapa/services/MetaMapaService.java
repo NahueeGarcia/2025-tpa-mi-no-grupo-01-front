@@ -72,4 +72,8 @@ public class MetaMapaService {
     public ColeccionDTO obtenerColeccionPorId(Long id) {
         return apiService.obtenerColeccionPorId(id);
     }
+
+    public List<String> obtenerArchivosMultimedia() {
+        return apiService.obtenerArchivosMultimedia();
+    }
 }

@@ -82,9 +82,14 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="pathContenidoMultimedia" class="form-label">Ruta Contenido Multimedia</label>
-                                <input type="text" class="form-control" id="pathContenidoMultimedia" th:field="*{pathContenidoMultimedia}">
-                                <div class="form-text">Ruta al archivo de imagen o video en el servidor del agregador.</div>
+                                <label for="pathContenidoMultimedia" class="form-label">Contenido Multimedia</label>
+                                <select class="form-select" id="pathContenidoMultimedia" th:field="*{pathContenidoMultimedia}">
+                                    <option value="">-- Sin Multimedia --</option>
+                                    <option th:each="archivo : ${archivosMultimedia}" 
+                                            th:value="${archivo}" 
+                                            th:text="${archivo}"></option>
+                                </select>
+                                <div class="form-text">Seleccione un archivo de la carpeta multimedia del servidor.</div>
                             </div>
 
                             <div class="d-flex justify-content-end">
